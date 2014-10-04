@@ -18,7 +18,12 @@ public class MainActivity extends RoboActivity {
     @Inject
     private LocationService locationService;
 
-    private Intent locationServiceIntent;
+    @Inject
+    private OrientationService orientationService;
+
+    @Inject
+    private CameraController cameraController;
+
     private Thread t;
 
     /**
@@ -28,8 +33,9 @@ public class MainActivity extends RoboActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        locationServiceIntent = new Intent(this, BackgroundLocationService.class);
-        startService(locationServiceIntent);
+        setContentView(R.layout.activity_main);
+
+        locationService.init();
 
         t = new Thread(new Runnable() {
             @Override
@@ -52,18 +58,35 @@ public class MainActivity extends RoboActivity {
         super.onStart();
 
         locationService.start();
+
+        orientationService.start();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        cameraController.start();
+    }
+
+    @Override
+    protected void onPause() {
+        cameraController.pause();
+
+        super.onPause();
     }
 
     @Override
     protected void onStop() {
         locationService.stop();
 
+        orientationService.stop();
+
         super.onStop();
     }
 
     @Override
     protected void onDestroy() {
-        stopService(locationServiceIntent);
         super.onDestroy();
     }
 }

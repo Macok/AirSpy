@@ -6,16 +6,20 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.location.Location;
 import android.os.IBinder;
+import android.view.View;
 import com.google.inject.Inject;
 import com.mac.airspy.ApplicationComponent;
 import com.mac.airspy.ComponentState;
+import com.mac.airspy.R;
 import roboguice.inject.ContextSingleton;
+import roboguice.inject.InjectView;
 
 /**
  * Created by Maciej on 2014-10-03.
  */
 @ContextSingleton
 public class LocationService implements ApplicationComponent, BackgroundLocationService.LocationListener {
+
     @Inject
     private Context ctx;
 
@@ -24,6 +28,8 @@ public class LocationService implements ApplicationComponent, BackgroundLocation
     private ComponentState state = ComponentState.STOPPED;
 
     private BackgroundLocationService bgLocationService;
+
+    private Intent backgroungServiceIntent;
 
     private final ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
@@ -42,15 +48,21 @@ public class LocationService implements ApplicationComponent, BackgroundLocation
         }
     };
 
-    @Override
+    public void init() {
+        backgroungServiceIntent = new Intent(ctx, BackgroundLocationService.class);
+        ctx.startService(backgroungServiceIntent);
+    }
+
+    public void release() {
+        ctx.stopService(backgroungServiceIntent);
+    }
+
     public void start() {
-        Intent serviceIntent = new Intent(ctx, BackgroundLocationService.class);
-        ctx.bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
+        ctx.bindService(backgroungServiceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
 
         state = ComponentState.STARTING;
     }
 
-    @Override
     public void stop() {
         if (bgLocationService != null) {
             bgLocationService.setListener(null);

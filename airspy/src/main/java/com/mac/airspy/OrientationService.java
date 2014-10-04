@@ -4,9 +4,11 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.view.View;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import roboguice.inject.ContextSingleton;
+import roboguice.inject.InjectView;
 
 /**
  * Created by Maciej on 2014-10-03.
@@ -35,12 +37,10 @@ public class OrientationService implements
         this.rotationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
     }
 
-    @Override
     public void start() {
         sensorManager.registerListener(this, rotationSensor, SensorManager.SENSOR_DELAY_GAME);
     }
 
-    @Override
     public void stop() {
         sensorManager.unregisterListener(this);
 
