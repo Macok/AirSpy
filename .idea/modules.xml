@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/AirSpy.iml" filepath="$PROJECT_DIR$/AirSpy.iml" />
+      <module fileurl="file://$PROJECT_DIR$/airspy/airspy.iml" filepath="$PROJECT_DIR$/airspy/airspy.iml" />
+    </modules>
+  </component>
+</project>
+
