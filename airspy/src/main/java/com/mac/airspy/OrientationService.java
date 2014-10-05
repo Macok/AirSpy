@@ -15,11 +15,7 @@ import roboguice.inject.InjectView;
  */
 
 @ContextSingleton
-public class OrientationService implements
-        ApplicationComponent,
-        SensorEventListener{
-
-    private ComponentState state = ComponentState.STOPPED;
+public class OrientationService extends BaseApplicationComponent implements SensorEventListener{
 
     private final SensorManager sensorManager;
 
@@ -45,11 +41,6 @@ public class OrientationService implements
         sensorManager.unregisterListener(this);
 
         state = ComponentState.STOPPED;
-    }
-
-    @Override
-    public ComponentState getState() {
-        return state;
     }
 
     @Override

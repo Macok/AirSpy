@@ -8,9 +8,7 @@ import android.location.Location;
 import android.os.IBinder;
 import android.view.View;
 import com.google.inject.Inject;
-import com.mac.airspy.ApplicationComponent;
-import com.mac.airspy.ComponentState;
-import com.mac.airspy.R;
+import com.mac.airspy.*;
 import roboguice.inject.ContextSingleton;
 import roboguice.inject.InjectView;
 
@@ -18,14 +16,9 @@ import roboguice.inject.InjectView;
  * Created by Maciej on 2014-10-03.
  */
 @ContextSingleton
-public class LocationService implements ApplicationComponent, BackgroundLocationService.LocationListener {
-
-    @Inject
-    private Context ctx;
+public class LocationService extends BaseApplicationComponent implements BackgroundLocationService.LocationListener {
 
     private Location currentLocation;
-
-    private ComponentState state = ComponentState.STOPPED;
 
     private BackgroundLocationService bgLocationService;
 
@@ -70,20 +63,15 @@ public class LocationService implements ApplicationComponent, BackgroundLocation
             bgLocationService = null;
         }
 
-        state = ComponentState.STOPPED ;
+        state = ComponentState.STOPPED;
     }
 
-    public Location getLocation() {
+    public SimpleLocation getLocation() {
         if (state != ComponentState.READY) {
             throw new IllegalStateException();
         }
 
-        return currentLocation;
-    }
-
-    @Override
-    public ComponentState getState() {
-        return state;
+        return new SimpleLocation(currentLocation);
     }
 
     @Override
