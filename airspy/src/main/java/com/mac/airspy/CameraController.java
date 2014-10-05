@@ -13,11 +13,12 @@ import roboguice.inject.InjectView;
 public class CameraController extends BaseApplicationComponent {
 
     @InjectView(R.id.cameraPreview)
-    private FrameLayout cameraView;
+    private FrameLayout cameraPreviewContainer;
 
     private Camera camera;
 
     private CameraParameters cameraParameters;
+    private CameraPreview cameraPreview;
 
     public void start() {
         camera = getCameraInstance();
@@ -28,8 +29,10 @@ public class CameraController extends BaseApplicationComponent {
 
         obtainCameraParameters();
 
-        cameraView.removeAllViews();
-        cameraView.addView(new CameraPreview(ctx, camera));
+        cameraPreview = new CameraPreview(ctx, camera);
+
+        cameraPreviewContainer.removeAllViews();
+        cameraPreviewContainer.addView(cameraPreview);
 
         state = ComponentState.READY;
     }
@@ -45,11 +48,19 @@ public class CameraController extends BaseApplicationComponent {
 
     public void pause() {
         if (camera != null) {
+            cameraPreview.stop();
             camera.release();
             camera = null;
         }
 
         state = ComponentState.STOPPED;
+    }
+
+    private void tryStopPreview() {
+        try {
+            camera.stopPreview();
+        } catch (Exception e) {
+        }
     }
 
     private Camera getCameraInstance(){
@@ -63,6 +74,6 @@ public class CameraController extends BaseApplicationComponent {
     }
 
     public CameraParameters getCameraParameters() {
-        return null;
+        return cameraParameters;
     }
 }

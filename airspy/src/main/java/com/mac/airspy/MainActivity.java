@@ -16,13 +16,7 @@ import roboguice.activity.RoboActivity;
 public class MainActivity extends RoboActivity {
 
     @Inject
-    private LocationService locationService;
-
-    @Inject
-    private OrientationService orientationService;
-
-    @Inject
-    private CameraController cameraController;
+    private ApplicationController applicationController;
 
     private Thread t;
 
@@ -34,9 +28,7 @@ public class MainActivity extends RoboActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-
-        locationService.init();
-
+/*
         t = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -50,43 +42,43 @@ public class MainActivity extends RoboActivity {
                 }
             }
         });
-        t.start();
+        t.start();*/
+
+        applicationController.create();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
-        locationService.start();
-
-        orientationService.start();
+        applicationController.start();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        cameraController.start();
+        applicationController.resume();
     }
 
     @Override
     protected void onPause() {
-        cameraController.pause();
+        applicationController.pause();
 
         super.onPause();
     }
 
     @Override
     protected void onStop() {
-        locationService.stop();
-
-        orientationService.stop();
+        applicationController.stop();
 
         super.onStop();
     }
 
     @Override
     protected void onDestroy() {
+        applicationController.destroy();
+
         super.onDestroy();
     }
 }

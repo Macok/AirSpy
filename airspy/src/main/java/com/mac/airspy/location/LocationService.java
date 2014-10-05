@@ -22,8 +22,6 @@ public class LocationService extends BaseApplicationComponent implements Backgro
 
     private BackgroundLocationService bgLocationService;
 
-    private Intent backgroungServiceIntent;
-
     private final ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder binder) {
@@ -41,17 +39,9 @@ public class LocationService extends BaseApplicationComponent implements Backgro
         }
     };
 
-    public void init() {
-        backgroungServiceIntent = new Intent(ctx, BackgroundLocationService.class);
-        ctx.startService(backgroungServiceIntent);
-    }
-
-    public void release() {
-        ctx.stopService(backgroungServiceIntent);
-    }
-
     public void start() {
-        ctx.bindService(backgroungServiceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
+        Intent bgServiceIntent = new Intent(ctx, BackgroundLocationService.class);
+        ctx.bindService(bgServiceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
 
         state = ComponentState.STARTING;
     }
@@ -59,9 +49,10 @@ public class LocationService extends BaseApplicationComponent implements Backgro
     public void stop() {
         if (bgLocationService != null) {
             bgLocationService.setListener(null);
-            ctx.unbindService(serviceConnection);
             bgLocationService = null;
         }
+
+        ctx.unbindService(serviceConnection);
 
         state = ComponentState.STOPPED;
     }
