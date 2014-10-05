@@ -40,14 +40,14 @@ public class OrientationService extends BaseApplicationComponent implements Sens
     public void stop() {
         sensorManager.unregisterListener(this);
 
-        state = ComponentState.STOPPED;
+        setState(ComponentState.STOPPED);
     }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
         sensorValues = event.values;
 
-        state = ComponentState.READY;
+        setState(ComponentState.READY);
     }
 
     @Override

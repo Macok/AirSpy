@@ -50,15 +50,15 @@ public class ARLayer extends BaseApplicationComponent implements SurfaceHolder.C
         holder.addCallback(this);
 
         if (holder.isCreating()) {
-            state = ComponentState.STARTING;
+            setState(ComponentState.STARTING);
         }else {
-            state = ComponentState.READY;
+            setState(ComponentState.READY);
         }
     }
 
     public void release() {
         holder.removeCallback(this);
-        state = ComponentState.STOPPED;
+        setState(ComponentState.STOPPED);
     }
 
     @Override
@@ -68,12 +68,12 @@ public class ARLayer extends BaseApplicationComponent implements SurfaceHolder.C
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         screenParameters = new ScreenParameters(width, height);
-        state = ComponentState.READY;
+        setState(ComponentState.READY);
     }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        state = ComponentState.STOPPED;
+        setState(ComponentState.STOPPED);
     }
 
     public ScreenParameters getScreenParameters() {

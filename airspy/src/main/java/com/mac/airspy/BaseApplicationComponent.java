@@ -12,6 +12,21 @@ public class BaseApplicationComponent implements ApplicationComponent {
 
     protected ComponentState state = ComponentState.STOPPED;
 
+    private StateChangedListener stateListener;
+
+    protected void setState(ComponentState state) {
+        this.state = state;
+
+        if (stateListener != null) {
+            stateListener.onStateChanged(this, state);
+        }
+    }
+
+    @Override
+    public void setStateListener(StateChangedListener stateListener) {
+        this.stateListener = stateListener;
+    }
+
     @Override
     public ComponentState getState() {
         return state;

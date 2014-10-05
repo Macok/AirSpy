@@ -35,7 +35,7 @@ public class LocationService extends BaseApplicationComponent implements Backgro
         public void onServiceDisconnected(ComponentName componentName) {
             bgLocationService = null;
 
-            state = ComponentState.STOPPED;
+            setState(ComponentState.STOPPED);
         }
     };
 
@@ -43,7 +43,7 @@ public class LocationService extends BaseApplicationComponent implements Backgro
         Intent bgServiceIntent = new Intent(ctx, BackgroundLocationService.class);
         ctx.bindService(bgServiceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
 
-        state = ComponentState.STARTING;
+        setState(ComponentState.STARTING);
     }
 
     public void stop() {
@@ -54,7 +54,7 @@ public class LocationService extends BaseApplicationComponent implements Backgro
 
         ctx.unbindService(serviceConnection);
 
-        state = ComponentState.STOPPED;
+        setState(ComponentState.STOPPED);
     }
 
     public SimpleLocation getLocation() {
@@ -69,6 +69,6 @@ public class LocationService extends BaseApplicationComponent implements Backgro
     public void onLocationChanged(Location location) {
         currentLocation = location;
 
-        state = ComponentState.READY;
+        setState(ComponentState.READY);
     }
 }

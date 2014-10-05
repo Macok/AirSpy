@@ -23,7 +23,7 @@ public class CameraController extends BaseApplicationComponent {
     public void start() {
         camera = getCameraInstance();
         if (camera == null) {
-            state = ComponentState.ERROR;
+            setState(ComponentState.ERROR);
             return;
         }
 
@@ -34,7 +34,7 @@ public class CameraController extends BaseApplicationComponent {
         cameraPreviewContainer.removeAllViews();
         cameraPreviewContainer.addView(cameraPreview);
 
-        state = ComponentState.READY;
+        setState(ComponentState.READY);
     }
 
     private void obtainCameraParameters() {
@@ -53,7 +53,7 @@ public class CameraController extends BaseApplicationComponent {
             camera = null;
         }
 
-        state = ComponentState.STOPPED;
+        setState(ComponentState.STOPPED);
     }
 
     private void tryStopPreview() {
