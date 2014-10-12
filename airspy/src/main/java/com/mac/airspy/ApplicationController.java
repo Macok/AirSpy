@@ -23,6 +23,7 @@ public class ApplicationController extends BaseApplicationComponent
     private final MainLoopController mainLoopController;
 
     private ApplicationComponent[] allComponents;
+    private ApplicationComponent[] firstPhaseComponents;
 
     //component that currently makes app state ERROR or STARTING
     private ApplicationComponent blockingComponent;
@@ -55,6 +56,13 @@ public class ApplicationController extends BaseApplicationComponent
                 cameraController,
                 arLayer,
                 mainLoopController
+        };
+
+        firstPhaseComponents = new ApplicationComponent[]{
+                locationService,
+                orientationService,
+                cameraController,
+                arLayer
         };
     }
 
@@ -95,9 +103,29 @@ public class ApplicationController extends BaseApplicationComponent
         updateAppState();
 
         //TODO start object source if ready
-        if (c == arLayer && newState == ComponentState.READY) {
-            mainLoopController.start();
+        if (firstPhaseReady()) {
+            if (!componentStarted(mainLoopController)) {
+                mainLoopController.start();
+            }
         }
+    }
+
+    private boolean componentStarted(ApplicationComponent component) {
+        if (component.getState() == ComponentState.READY || component.getState() == ComponentState.STARTING) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean firstPhaseReady() {
+        for (ApplicationComponent component : firstPhaseComponents) {
+            if (ComponentState.READY != component.getState()) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private void updateAppState() {

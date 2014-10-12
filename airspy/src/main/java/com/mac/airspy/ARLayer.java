@@ -5,6 +5,7 @@ import android.graphics.*;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.TextView;
 import com.google.inject.Inject;
 import com.mac.airspy.parameters.ScreenParameters;
 import roboguice.inject.ContextSingleton;
@@ -22,9 +23,21 @@ public class ARLayer extends BaseApplicationComponent implements SurfaceHolder.C
     @InjectView(R.id.arLayerView)
     private SurfaceView arLayerView;
 
+    @InjectView(R.id.textView3)
+    private TextView fpsView;
+
     private SurfaceHolder holder;
 
     private ScreenParameters screenParameters;
+
+    public void setFps(final int fps) {
+        fpsView.post(new Runnable() {
+            @Override
+            public void run() {
+                fpsView.setText("" + fps);
+            }
+        });
+    }
 
     public void draw(List<ObjectOnScreen> objects) {
         Canvas canvas = holder.lockCanvas();

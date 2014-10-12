@@ -12,6 +12,9 @@ import java.util.List;
 public class MainLoop implements Runnable {
     private boolean running = true;
 
+    private long lastFpsUpdate = 0;
+    private int frameCounter = 0;
+
     @Inject
     private ARLayer arLayer;
 
@@ -22,7 +25,21 @@ public class MainLoop implements Runnable {
         objects.add(o);
 
         while (running) {
+            calculateFps();
+
             arLayer.draw(objects);
+
+            frameCounter++;
+        }
+    }
+
+    private void calculateFps() {
+        long time = System.currentTimeMillis();
+
+        if (lastFpsUpdate < time - 1000) {
+            arLayer.setFps(frameCounter);
+            lastFpsUpdate = System.currentTimeMillis();
+            frameCounter = 0;
         }
     }
 

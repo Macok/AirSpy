@@ -13,6 +13,8 @@ public class MainLoopController extends BaseApplicationComponent {
     private MainLoop mainLoop;
 
     public void start() {
+        setState(ComponentState.STARTING);
+
         mainLoop = new MainLoop();
         RoboGuice.getInjector(ctx).injectMembers(mainLoop);
         new Thread(mainLoop).start();
@@ -23,6 +25,7 @@ public class MainLoopController extends BaseApplicationComponent {
     public void stop() {
         if (mainLoop != null) {
             mainLoop.stop();
+            mainLoop = null;
         }
 
         setState(ComponentState.STOPPED);
