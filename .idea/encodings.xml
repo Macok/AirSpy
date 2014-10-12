@@ -3,6 +3,7 @@
   <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false">
     <file url="file://$PROJECT_DIR$/airspy/src/main/java/com/mac/airspy/ARObject.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/airspy/src/main/java/com/mac/airspy/ObjectOnScreen.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/airspy/src/main/java/com/mac/airspy/content/source/TestObject.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/airspy/src/main/java/com/mac/airspy/location/SimpleLocation.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/airspy/src/main/java/com/mac/airspy/parameters/CameraParameters.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/airspy/src/main/java/com/mac/airspy/parameters/ScreenParameters.java" charset="UTF-8" />

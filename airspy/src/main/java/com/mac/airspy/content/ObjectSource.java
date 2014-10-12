@@ -1,0 +1,12 @@
+package com.mac.airspy.content;
+
+import com.mac.airspy.ARObject;
+
+import java.util.List;
+
+/**
+ * Created by Maciej on 2014-10-12.
+ */
+public interface ObjectSource {
+    public List<ARObject> getObjects();
+}

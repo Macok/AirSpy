@@ -2,8 +2,10 @@ package com.mac.airspy;
 
 import android.graphics.PointF;
 import com.google.inject.Inject;
+import com.mac.airspy.location.SimpleLocation;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -18,17 +20,31 @@ public class MainLoop implements Runnable {
     @Inject
     private ARLayer arLayer;
 
+    @Inject
+    private ScreenPositionCalculator screenPositionCalculator;
+
+    @Inject
+    private ObjectSourceManager objectSourceManager;
+
     @Override
     public void run() {
-        ObjectOnScreen o = new ObjectOnScreen(null, new PointF(200, 200));
-        List<ObjectOnScreen> objects = new ArrayList<>();
-        objects.add(o);
-
         while (running) {
             calculateFps();
 
-            arLayer.draw(objects);
+            List<ObjectOnScreen> objectsOnScreen = new LinkedList<>();
+            if (ComponentState.READY == objectSourceManager.getState()) {
+                List<ARObject> objects = objectSourceManager.getObjects();
 
+                for (ARObject object : objects) {
+                    PointF pointOnScreen = screenPositionCalculator.calculateScreenPosition(object.getLocation());
+                    if (pointOnScreen != null) {
+                        objectsOnScreen.add(new ObjectOnScreen(object, pointOnScreen));
+                    }
+                }
+
+            }
+
+            arLayer.draw(objectsOnScreen);
             frameCounter++;
         }
     }

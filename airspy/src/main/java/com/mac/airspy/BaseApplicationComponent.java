@@ -15,10 +15,12 @@ public class BaseApplicationComponent implements ApplicationComponent {
     private StateChangedListener stateListener;
 
     protected void setState(ComponentState state) {
-        this.state = state;
+        if (this.state != state) {
+            this.state = state;
 
-        if (stateListener != null) {
-            stateListener.onStateChanged(this, state);
+            if (stateListener != null) {
+                stateListener.onStateChanged(this, state);
+            }
         }
     }
 

@@ -72,14 +72,16 @@ public class ScreenPositionCalculator {
         if (Math.abs(deltaPhi) > Math.PI / 2)
             return null;
 
-        double posX = (screenParameters.sizeX / 2) * Math.tan(deltaPhi) / Math.tan(cameraParameters.horizontalViewAngle);
+        double posX = (screenParameters.sizeX / 2) * Math.tan(deltaPhi) /
+                Math.tan(cameraParameters.horizontalViewAngle / 2);
 
         double deltaTheta = theta - orientationValues[1];
 
         if (Math.abs(deltaTheta) > Math.PI / 2)
             return null;
 
-        double posY = -(screenParameters.sizeY / 2) * Math.tan(deltaTheta) / Math.tan(cameraParameters.verticalViewAngle);
+        double posY = -(screenParameters.sizeY / 2) * Math.tan(deltaTheta) /
+                Math.tan(cameraParameters.verticalViewAngle / 2);
 
         posX = screenParameters.sizeX / 2 + posX;
         posY = screenParameters.sizeY / 2 + posY;

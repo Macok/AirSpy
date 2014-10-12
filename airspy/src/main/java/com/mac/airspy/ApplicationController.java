@@ -21,6 +21,7 @@ public class ApplicationController extends BaseApplicationComponent
     private final CameraController cameraController;
     private final ARLayer arLayer;
     private final MainLoopController mainLoopController;
+    private final ObjectSourceManager objectSourceManager;
 
     private ApplicationComponent[] allComponents;
     private ApplicationComponent[] firstPhaseComponents;
@@ -28,19 +29,23 @@ public class ApplicationController extends BaseApplicationComponent
     //component that currently makes app state ERROR or STARTING
     private ApplicationComponent blockingComponent;
 
+    private boolean pausedByUser;
+
     @Inject
     public ApplicationController(
             LocationService locationService,
             OrientationService orientationService,
             CameraController cameraController,
             ARLayer arLayer,
-            MainLoopController mainLoopController
+            MainLoopController mainLoopController,
+            ObjectSourceManager objectSourceManager
     ) {
         this.locationService = locationService;
         this.orientationService = orientationService;
         this.cameraController = cameraController;
         this.arLayer = arLayer;
         this.mainLoopController = mainLoopController;
+        this.objectSourceManager = objectSourceManager;
 
         initComponentsLists();
 
@@ -55,7 +60,8 @@ public class ApplicationController extends BaseApplicationComponent
                 orientationService,
                 cameraController,
                 arLayer,
-                mainLoopController
+                mainLoopController,
+                objectSourceManager
         };
 
         firstPhaseComponents = new ApplicationComponent[]{
@@ -77,14 +83,22 @@ public class ApplicationController extends BaseApplicationComponent
     }
 
     public void resume() {
+        pausedByUser = false;
+
         cameraController.resume();
     }
 
     public void pause() {
+        pausedByUser = true;
+
         cameraController.pause();
 
         if (ComponentState.STOPPED != mainLoopController.getState()) {
             mainLoopController.stop();
+        }
+
+        if (ComponentState.STOPPED != objectSourceManager.getState()) {
+            objectSourceManager.stop();
         }
     }
 
@@ -99,19 +113,23 @@ public class ApplicationController extends BaseApplicationComponent
     }
 
     @Override
-    public void onStateChanged(ApplicationComponent c, ComponentState newState) {
+    public void onStateChanged(ApplicationComponent component, ComponentState newState) {
         updateAppState();
 
-        //TODO start object source if ready
-        if (firstPhaseReady()) {
+        if (firstPhaseReady() && !pausedByUser) {
             if (!componentStarted(mainLoopController)) {
                 mainLoopController.start();
+            }
+
+            if (!componentStarted(objectSourceManager)) {
+                objectSourceManager.start();
             }
         }
     }
 
     private boolean componentStarted(ApplicationComponent component) {
-        if (component.getState() == ComponentState.READY || component.getState() == ComponentState.STARTING) {
+        if (ComponentState.READY == component.getState() ||
+                ComponentState.STARTING == component.getState()) {
             return true;
         }
 
