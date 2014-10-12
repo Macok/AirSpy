@@ -1,7 +1,7 @@
 package com.mac.airspy.utils;
 
 
-import com.mac.airspy.SimpleLocation;
+import com.mac.airspy.location.SimpleLocation;
 
 /**
  * Created by Maciej on 02.02.14.

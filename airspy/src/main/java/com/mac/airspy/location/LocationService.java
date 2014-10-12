@@ -6,11 +6,9 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.location.Location;
 import android.os.IBinder;
-import android.view.View;
-import com.google.inject.Inject;
+import android.widget.Toast;
 import com.mac.airspy.*;
 import roboguice.inject.ContextSingleton;
-import roboguice.inject.InjectView;
 
 /**
  * Created by Maciej on 2014-10-03.
@@ -71,5 +69,12 @@ public class LocationService extends BaseApplicationComponent implements Backgro
         currentLocation = location;
 
         setState(ComponentState.READY);
+    }
+
+    @Override
+    public void onError(String message) {
+        Toast.makeText(ctx, message, Toast.LENGTH_SHORT).show();
+
+        setState(ComponentState.ERROR);
     }
 }

@@ -1,6 +1,6 @@
 package com.mac.airspy;
 
-import java.io.IOException;
+import com.mac.airspy.location.SimpleLocation;
 
 /**
  * Created by Maciej on 02.02.14.

@@ -56,13 +56,6 @@ public class CameraController extends BaseApplicationComponent {
         setState(ComponentState.STOPPED);
     }
 
-    private void tryStopPreview() {
-        try {
-            camera.stopPreview();
-        } catch (Exception e) {
-        }
-    }
-
     private Camera getCameraInstance(){
         Camera c = null;
         try {

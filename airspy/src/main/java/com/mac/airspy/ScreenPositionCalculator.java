@@ -3,6 +3,7 @@ package com.mac.airspy;
 import android.graphics.PointF;
 import com.google.inject.Inject;
 import com.mac.airspy.location.LocationService;
+import com.mac.airspy.location.SimpleLocation;
 import com.mac.airspy.parameters.CameraParameters;
 import com.mac.airspy.parameters.ScreenParameters;
 import com.mac.airspy.utils.MathUtils;

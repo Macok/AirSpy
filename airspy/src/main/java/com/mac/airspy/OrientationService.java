@@ -31,10 +31,17 @@ public class OrientationService extends BaseApplicationComponent implements Sens
     public OrientationService(SensorManager sensorManager) {
         this.sensorManager = sensorManager;
         this.rotationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
+
+        if (rotationSensor == null) {
+            setState(ComponentState.ERROR);
+        }
     }
 
     public void start() {
-        sensorManager.registerListener(this, rotationSensor, SensorManager.SENSOR_DELAY_GAME);
+        if (state != ComponentState.ERROR) {
+            sensorManager.registerListener(this, rotationSensor, SensorManager.SENSOR_DELAY_GAME);
+            state = ComponentState.STARTING;
+        }
     }
 
     public void stop() {

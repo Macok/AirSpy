@@ -1,4 +1,4 @@
-package com.mac.airspy;
+package com.mac.airspy.location;
 
 import android.location.Location;
 

@@ -37,6 +37,8 @@ public class BackgroundLocationService extends RoboService implements
     private LocationClient locationClient;
     private LocationRequest locationRequest;
 
+    private String errorMessage;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -44,7 +46,9 @@ public class BackgroundLocationService extends RoboService implements
         Log.d("", "CREATE");
 
         if (!playServicesAvailable()) {
-            Toast.makeText(ctx, "Google Play Services not available", Toast.LENGTH_SHORT).show();
+            errorMessage = "Google Play Services not available";
+            sendErrorToListener();
+
             return;
         }
 
@@ -86,32 +90,39 @@ public class BackgroundLocationService extends RoboService implements
         //TODO usunac
         Toast.makeText(this, "Connected", Toast.LENGTH_SHORT).show();
 
+        errorMessage = null;
+
         locationClient.requestLocationUpdates(locationRequest, this);
     }
 
     @Override
     public void onDisconnected() {
-        //TODO usunac
-        Toast.makeText(this, "Disconnected. Please re-connect.",
-                Toast.LENGTH_SHORT).show();
+        errorMessage = "Google Play Services error";
+        sendErrorToListener();
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult result) {
-        String msg = "Google Play Services error: " + result.getErrorCode();
-        Toast.makeText(ctx, msg, Toast.LENGTH_SHORT).show();
+        errorMessage = "Google Play Services error: " + result.getErrorCode();
+        sendErrorToListener();
 
         retryConnecting();
     }
 
     @Override
     public void onLocationChanged(Location location) {
-        notifyListener(location);
+        sendLocationToListener(location);
     }
 
-    private void notifyListener(Location location) {
+    private void sendLocationToListener(Location location) {
         if (listener != null) {
             listener.onLocationChanged(location);
+        }
+    }
+
+    private void sendErrorToListener() {
+        if (listener != null) {
+            listener.onError(errorMessage);
         }
     }
 
@@ -125,13 +136,17 @@ public class BackgroundLocationService extends RoboService implements
         this.listener = listener;
 
         sendLastLocationIfPresent();
+
+        if (errorMessage != null) {
+            sendErrorToListener();
+        }
     }
 
     private void sendLastLocationIfPresent() {
         if (locationClient != null && locationClient.isConnected()) {
             Location lastLocation = locationClient.getLastLocation();
             if (lastLocation != null) {
-                notifyListener(lastLocation);
+                sendLocationToListener(lastLocation);
             }
         }
     }
@@ -144,5 +159,7 @@ public class BackgroundLocationService extends RoboService implements
 
     public static interface LocationListener {
         public void onLocationChanged(Location location);
+
+        public void onError(String message);
     }
 }
