@@ -15,6 +15,7 @@ import roboguice.inject.InjectView;
 /**
  * Created by Maciej on 2014-10-03.
  */
+
 @ContextSingleton
 public class LocationService extends BaseApplicationComponent implements BackgroundLocationService.LocationListener {
 

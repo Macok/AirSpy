@@ -20,7 +20,7 @@ public class CameraController extends BaseApplicationComponent {
     private CameraParameters cameraParameters;
     private CameraPreview cameraPreview;
 
-    public void start() {
+    public void resume() {
         camera = getCameraInstance();
         if (camera == null) {
             setState(ComponentState.ERROR);
