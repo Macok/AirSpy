@@ -23,7 +23,7 @@ public class ObjectSourceManager extends BaseApplicationComponent {
     private UpdateObjectsCommand currentUpdateCommand;
 
     public void start() {
-        setState(ComponentState.STARTING);
+        setState(objects == null ? ComponentState.STARTING : ComponentState.READY);
 
         currentUpdateCommand = new UpdateObjectsCommand(objectSource);
         executor = Executors.newSingleThreadScheduledExecutor();

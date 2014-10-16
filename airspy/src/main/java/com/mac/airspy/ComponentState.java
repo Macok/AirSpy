@@ -7,5 +7,5 @@ public enum ComponentState {
     READY,
     STARTING,
     STOPPED,
-    ERROR;
+    ERROR
 }

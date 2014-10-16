@@ -18,7 +18,8 @@ public class MainActivity extends RoboActivity {
     @Inject
     private ApplicationController applicationController;
 
-    private Thread t;
+    @Inject
+    private AppStateDisplay appStateDisplay;
 
     /**
      * Called when the activity is starting. Restores the activity state.
@@ -28,21 +29,6 @@ public class MainActivity extends RoboActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-/*
-        t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    int i=0;
-                    while (i++<50) {
-                        Log.d("", "STATE: " + locationService.getState());
-                        Thread.sleep(1000);
-                    }
-                } catch (InterruptedException e) {
-                }
-            }
-        });
-        t.start();*/
 
         applicationController.create();
     }
@@ -78,6 +64,8 @@ public class MainActivity extends RoboActivity {
     @Override
     protected void onDestroy() {
         applicationController.destroy();
+
+        appStateDisplay.dismiss();
 
         super.onDestroy();
     }
