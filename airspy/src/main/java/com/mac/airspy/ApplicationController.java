@@ -1,12 +1,8 @@
 package com.mac.airspy;
 
-import android.graphics.PointF;
 import com.google.inject.Inject;
 import com.mac.airspy.location.LocationService;
 import roboguice.inject.ContextSingleton;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Maciej on 2014-10-05.
@@ -26,10 +22,10 @@ public class ApplicationController extends BaseApplicationComponent
     private ApplicationComponent[] allComponents;
     private ApplicationComponent[] firstPhaseComponents;
 
-    //component that currently makes app state ERROR or STARTING
+    //component that currently makes app state ERROR, STARTING or STOPPED
     private ApplicationComponent blockingComponent;
 
-    private boolean pausedByUser;
+    private boolean starting;
 
     @Inject
     public ApplicationController(
@@ -73,23 +69,26 @@ public class ApplicationController extends BaseApplicationComponent
     }
 
     public void create() {
+        starting = true;
+
         arLayer.init();
     }
 
     public void start() {
-        locationService.start();
+        starting = true;
 
+        locationService.start();
         orientationService.start();
     }
 
     public void resume() {
-        pausedByUser = false;
+        starting = true;
 
         cameraController.resume();
     }
 
     public void pause() {
-        pausedByUser = true;
+        starting = false;
 
         cameraController.pause();
 
@@ -103,12 +102,15 @@ public class ApplicationController extends BaseApplicationComponent
     }
 
     public void stop() {
-        orientationService.stop();
+        starting = false;
 
+        orientationService.stop();
         locationService.stop();
     }
 
     public void destroy() {
+        starting = false;
+
         arLayer.release();
     }
 
@@ -116,7 +118,7 @@ public class ApplicationController extends BaseApplicationComponent
     public void onStateChanged(ApplicationComponent component, ComponentState newState) {
         updateAppState();
 
-        if (firstPhaseReady() && !pausedByUser) {
+        if (firstPhaseReady() && starting) {
             if (!componentStarted(mainLoopController)) {
                 mainLoopController.start();
             }
@@ -165,7 +167,7 @@ public class ApplicationController extends BaseApplicationComponent
                     setState(ComponentState.ERROR);
                     return;
                 } else {
-                    setState(ComponentState.STARTING);
+                    setState(starting ? ComponentState.STARTING : ComponentState.STOPPED);
                 }
             }
         }

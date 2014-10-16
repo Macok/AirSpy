@@ -14,48 +14,27 @@ import java.util.List;
 public class MainLoop implements Runnable {
     private boolean running = true;
 
-    private long lastFpsUpdate = 0;
-    private int frameCounter = 0;
-
     @Inject
     private ARLayer arLayer;
 
     @Inject
-    private ScreenPositionCalculator screenPositionCalculator;
+    private VisibleObjectsObtainer visibleObjectsObtainer;
 
     @Inject
     private ObjectSourceManager objectSourceManager;
 
+    @Inject
+    private FPSCalculator fpsCalculator;
+
     @Override
     public void run() {
         while (running) {
-            calculateFps();
+            arLayer.setFps(fpsCalculator.getFpsAndUpdate());
 
-            List<ObjectOnScreen> objectsOnScreen = new LinkedList<>();
             if (ComponentState.READY == objectSourceManager.getState()) {
-                List<ARObject> objects = objectSourceManager.getObjects();
-
-                for (ARObject object : objects) {
-                    PointF pointOnScreen = screenPositionCalculator.calculateScreenPosition(object.getLocation());
-                    if (pointOnScreen != null) {
-                        objectsOnScreen.add(new ObjectOnScreen(object, pointOnScreen));
-                    }
-                }
-
+                arLayer.draw(visibleObjectsObtainer.getObjectsOnScreen());
             }
 
-            arLayer.draw(objectsOnScreen);
-            frameCounter++;
-        }
-    }
-
-    private void calculateFps() {
-        long time = System.currentTimeMillis();
-
-        if (lastFpsUpdate < time - 1000) {
-            arLayer.setFps(frameCounter);
-            lastFpsUpdate = System.currentTimeMillis();
-            frameCounter = 0;
         }
     }
 
