@@ -52,12 +52,12 @@ public class ApplicationController extends BaseApplicationComponent
 
     private void initComponentsLists() {
         allComponents = new ApplicationComponent[]{
-                locationService,
-                orientationService,
-                cameraController,
-                arLayer,
+                objectSourceManager,
                 mainLoopController,
-                objectSourceManager
+                locationService,
+                arLayer,
+                orientationService,
+                cameraController
         };
 
         firstPhaseComponents = new ApplicationComponent[]{
@@ -156,7 +156,7 @@ public class ApplicationController extends BaseApplicationComponent
 
     private void doUpdateAppState() {
         blockingComponent = null;
-        setState(ComponentState.READY);
+        ComponentState newState = ComponentState.READY;
 
         for (ApplicationComponent component : allComponents) {
             ComponentState componentState = component.getState();
@@ -164,13 +164,22 @@ public class ApplicationController extends BaseApplicationComponent
                 blockingComponent = component;
 
                 if (ComponentState.ERROR == componentState) {
-                    setState(ComponentState.ERROR);
-                    return;
+                    newState = ComponentState.ERROR;
+                    break;
                 } else {
-                    setState(starting ? ComponentState.STARTING : ComponentState.STOPPED);
+                    newState = starting ? ComponentState.STARTING : ComponentState.STOPPED;
                 }
             }
         }
+
+        setState(newState);
+    }
+
+
+    @Override
+    protected void setState(ComponentState state) {
+        //notify listener even if new state is the same as old
+        super.doSetState(state);
     }
 
     @Override

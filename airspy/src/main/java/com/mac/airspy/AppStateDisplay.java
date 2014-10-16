@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Looper;
 import android.util.Log;
 import com.google.inject.Inject;
 import roboguice.inject.ContextSingleton;
@@ -18,6 +19,9 @@ public class AppStateDisplay implements ApplicationComponent.StateChangedListene
     private final MainActivity activity;
 
     private final ApplicationController applicationController;
+
+    @Inject
+    private AppStateMessageObtainer stateMessageObtainer;
 
     private final ProgressDialog dialog;
 
@@ -35,17 +39,29 @@ public class AppStateDisplay implements ApplicationComponent.StateChangedListene
             }
         });
 
+        dialog.show();
+
         applicationController.setStateListener(this);
     }
 
     @Override
     public void onStateChanged(ApplicationComponent component, ComponentState newState) {
-        if (ComponentState.READY == newState) {
-            dialog.hide();
+        ApplicationComponent blockingComponent = applicationController.getBlockingComponent();
+        Log.d("", "APPSTATE: " + newState);
+        if (blockingComponent != null) {
+            Log.d("", "APPSTATE: " + " BLOCKING: " + blockingComponent.getIdentifier() +
+                    " BLOCKING STATE: " +  blockingComponent.getState());
+        }
+
+        String message = stateMessageObtainer.getCurrentStateMessage();
+
+        if (newState == ComponentState.READY) {
+            dialog.dismiss();
         } else {
-            dialog.setMessage("Loading");
             dialog.show();
         }
+
+        dialog.setMessage(message);
     }
 
     public void dismiss() {

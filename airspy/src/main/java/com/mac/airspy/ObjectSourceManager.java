@@ -1,5 +1,6 @@
 package com.mac.airspy;
 
+import android.app.Activity;
 import com.mac.airspy.content.ObjectSource;
 import com.mac.airspy.content.source.TestObjectSource;
 import roboguice.inject.ContextSingleton;
@@ -55,12 +56,24 @@ public class ObjectSourceManager extends BaseApplicationComponent {
         public void run() {
             if (!cancelled) {
                 objects = objectSource.getObjects();
-                setState(ComponentState.READY);
+
+                setStateOnUiThread();
+
             }
         }
 
         public void cancel() {
             cancelled = true;
         }
+    }
+
+    private void setStateOnUiThread() {
+        Activity activity = (Activity) ctx;
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                setState(ComponentState.READY);
+            }
+        });
     }
 }

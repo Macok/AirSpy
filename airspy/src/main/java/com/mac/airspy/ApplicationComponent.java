@@ -4,6 +4,8 @@ package com.mac.airspy;
  * Created by Maciej on 2014-10-03.
  */
 public interface ApplicationComponent {
+    public String getIdentifier();
+
     public ComponentState getState();
 
     public void setStateListener(StateChangedListener stateListener);
