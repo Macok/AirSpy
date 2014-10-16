@@ -37,6 +37,8 @@ public class MainActivity extends RoboActivity {
     protected void onStart() {
         super.onStart();
 
+        appStateDisplay.setEnabled(true);
+
         applicationController.start();
     }
 
@@ -58,14 +60,14 @@ public class MainActivity extends RoboActivity {
     protected void onStop() {
         applicationController.stop();
 
+        appStateDisplay.setEnabled(false);
+
         super.onStop();
     }
 
     @Override
     protected void onDestroy() {
         applicationController.destroy();
-
-        appStateDisplay.dismiss();
 
         super.onDestroy();
     }

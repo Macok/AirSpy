@@ -23,14 +23,18 @@ public class AppStateDisplay implements ApplicationComponent.StateChangedListene
     @Inject
     private AppStateMessageObtainer stateMessageObtainer;
 
-    private final ProgressDialog dialog;
+    private ProgressDialog dialog;
 
     @Inject
     public AppStateDisplay(Context activity, ApplicationController applicationController) {
         this.activity = (MainActivity) activity;
         this.applicationController = applicationController;
 
-        dialog = new ProgressDialog(activity);
+        applicationController.setStateListener(this);
+    }
+
+    private ProgressDialog createDialog() {
+        ProgressDialog dialog = new ProgressDialog(activity);
         dialog.setCanceledOnTouchOutside(false);
         dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
@@ -39,24 +43,20 @@ public class AppStateDisplay implements ApplicationComponent.StateChangedListene
             }
         });
 
-        dialog.show();
-
-        applicationController.setStateListener(this);
+        return dialog;
     }
 
     @Override
     public void onStateChanged(ApplicationComponent component, ComponentState newState) {
-        ApplicationComponent blockingComponent = applicationController.getBlockingComponent();
-        Log.d("", "APPSTATE: " + newState);
-        if (blockingComponent != null) {
-            Log.d("", "APPSTATE: " + " BLOCKING: " + blockingComponent.getIdentifier() +
-                    " BLOCKING STATE: " +  blockingComponent.getState());
+        if (dialog == null) {
+            //disabled
+            return;
         }
 
         String message = stateMessageObtainer.getCurrentStateMessage();
 
         if (newState == ComponentState.READY) {
-            dialog.dismiss();
+            dialog.hide();
         } else {
             dialog.show();
         }
@@ -64,7 +64,12 @@ public class AppStateDisplay implements ApplicationComponent.StateChangedListene
         dialog.setMessage(message);
     }
 
-    public void dismiss() {
-        dialog.dismiss();
+    public void setEnabled(boolean enabled) {
+        if (enabled) {
+            dialog = createDialog();
+        } else {
+            dialog.dismiss();
+            dialog = null;
+        }
     }
 }

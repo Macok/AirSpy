@@ -35,8 +35,11 @@ public class ObjectSourceManager extends BaseApplicationComponent {
         setState(ComponentState.STOPPED);
 
         currentUpdateCommand.cancel();
-        executor.shutdown();
-        executor = null;
+
+        if (executor != null) {
+            executor.shutdown();
+            executor = null;
+        }
     }
 
     public List<ARObject> getObjects() {
