@@ -17,7 +17,7 @@ public class ApplicationController extends BaseApplicationComponent
     private final CameraController cameraController;
     private final ARLayer arLayer;
     private final MainLoopController mainLoopController;
-    private final ObjectSourceManager objectSourceManager;
+    private final ObjectsProvider objectsProvider;
 
     private ApplicationComponent[] allComponents;
     private ApplicationComponent[] firstPhaseComponents;
@@ -34,14 +34,14 @@ public class ApplicationController extends BaseApplicationComponent
             CameraController cameraController,
             ARLayer arLayer,
             MainLoopController mainLoopController,
-            ObjectSourceManager objectSourceManager
+            ObjectsProvider objectsProvider
     ) {
         this.locationService = locationService;
         this.orientationService = orientationService;
         this.cameraController = cameraController;
         this.arLayer = arLayer;
         this.mainLoopController = mainLoopController;
-        this.objectSourceManager = objectSourceManager;
+        this.objectsProvider = objectsProvider;
 
         initComponentsLists();
 
@@ -52,7 +52,7 @@ public class ApplicationController extends BaseApplicationComponent
 
     private void initComponentsLists() {
         allComponents = new ApplicationComponent[]{
-                objectSourceManager,
+                objectsProvider,
                 mainLoopController,
                 locationService,
                 arLayer,
@@ -96,8 +96,8 @@ public class ApplicationController extends BaseApplicationComponent
             mainLoopController.stop();
         }
 
-        if (ComponentState.STOPPED != objectSourceManager.getState()) {
-            objectSourceManager.stop();
+        if (ComponentState.STOPPED != objectsProvider.getState()) {
+            objectsProvider.stop();
         }
     }
 
@@ -123,8 +123,8 @@ public class ApplicationController extends BaseApplicationComponent
                 mainLoopController.start();
             }
 
-            if (!componentStarted(objectSourceManager)) {
-                objectSourceManager.start();
+            if (!componentStarted(objectsProvider)) {
+                objectsProvider.start();
             }
         }
     }

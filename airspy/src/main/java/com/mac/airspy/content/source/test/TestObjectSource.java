@@ -1,4 +1,4 @@
-package com.mac.airspy.content.source;
+package com.mac.airspy.content.source.test;
 
 import com.mac.airspy.ARObject;
 import com.mac.airspy.content.ObjectSource;

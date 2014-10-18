@@ -2,9 +2,7 @@ package com.mac.airspy;
 
 import android.content.Context;
 import android.graphics.*;
-import android.util.Log;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
+import android.view.*;
 import android.widget.TextView;
 import com.google.inject.Inject;
 import com.mac.airspy.parameters.ScreenParameters;
@@ -26,9 +24,17 @@ public class ARLayer extends BaseApplicationComponent implements SurfaceHolder.C
     @InjectView(R.id.textView3)
     private TextView fpsView;
 
+    private View marker;
+
     private SurfaceHolder holder;
 
     private ScreenParameters screenParameters;
+
+    @Inject
+    public ARLayer(Context ctx) {
+        LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        marker = inflater.inflate(R.layout.marker, null, false);
+    }
 
     public void setFps(final int fps) {
         fpsView.post(new Runnable() {
@@ -54,9 +60,27 @@ public class ARLayer extends BaseApplicationComponent implements SurfaceHolder.C
             canvas.translate(object.position.x, object.position.y);
             Paint paint = new Paint();
             paint.setColor(0xffff0000);
-            canvas.drawCircle(0, 0, 45, paint);
+            canvas.drawCircle(0, 0, 20, paint);
+
+            View marker = getMarkerForObject(object.object);
+            canvas.translate(-marker.getWidth() / 2f, -marker.getHeight());
+            marker.draw(canvas);
             canvas.restore();
         }
+    }
+
+    private View getMarkerForObject(ARObject object) {
+        TextView nameView = (TextView) marker.findViewById(R.id.textView);
+        TextView distanceView = (TextView) marker.findViewById(R.id.textView2);
+
+        nameView.setText(object.getName());
+        distanceView.setText(object.getDistanceKm() + " km");
+
+        int spec = View.MeasureSpec.makeMeasureSpec(ViewGroup.LayoutParams.WRAP_CONTENT, View.MeasureSpec.UNSPECIFIED);
+        marker.measure(spec, spec);
+        marker.layout(0, 0, marker.getMeasuredWidth(), marker.getMeasuredHeight());
+
+        return marker;
     }
 
     public void init() {

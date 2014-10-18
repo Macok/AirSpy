@@ -15,7 +15,7 @@ public class MainLoop implements Runnable {
     private VisibleObjectsObtainer visibleObjectsObtainer;
 
     @Inject
-    private ObjectSourceManager objectSourceManager;
+    private ObjectsProvider objectsProvider;
 
     @Inject
     private FPSCalculator fpsCalculator;
@@ -24,7 +24,7 @@ public class MainLoop implements Runnable {
     public void run() {
         while (running) {
 
-            if (ComponentState.READY == objectSourceManager.getState()) {
+            if (ComponentState.READY == objectsProvider.getState()) {
                 arLayer.setFps(fpsCalculator.getFpsAndUpdate());
                 arLayer.draw(visibleObjectsObtainer.getObjectsOnScreen());
             }

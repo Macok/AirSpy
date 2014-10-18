@@ -2,7 +2,9 @@ package com.mac.airspy;
 
 import android.app.Activity;
 import com.mac.airspy.content.ObjectSource;
-import com.mac.airspy.content.source.TestObjectSource;
+import com.mac.airspy.content.source.fr24.FRObjectSource;
+import com.mac.airspy.content.source.test.TestObjectSource;
+import roboguice.RoboGuice;
 import roboguice.inject.ContextSingleton;
 
 import java.util.List;
@@ -13,17 +15,20 @@ import java.util.concurrent.*;
  */
 
 @ContextSingleton
-public class ObjectSourceManager extends BaseApplicationComponent {
+public class ObjectsProvider extends BaseApplicationComponent {
 
     private ScheduledExecutorService executor;
 
     private List<ARObject> objects;
 
-    private ObjectSource objectSource = new TestObjectSource();
+    private ObjectSource objectSource;
 
     private UpdateObjectsCommand currentUpdateCommand;
 
     public void start() {
+        objectSource = new FRObjectSource();
+        RoboGuice.getInjector(ctx).injectMembers(objectSource);
+
         setState(objects == null ? ComponentState.STARTING : ComponentState.READY);
 
         currentUpdateCommand = new UpdateObjectsCommand(objectSource);
@@ -35,6 +40,8 @@ public class ObjectSourceManager extends BaseApplicationComponent {
         setState(ComponentState.STOPPED);
 
         currentUpdateCommand.cancel();
+
+        objectSource = null;
 
         if (executor != null) {
             executor.shutdown();
@@ -61,7 +68,6 @@ public class ObjectSourceManager extends BaseApplicationComponent {
                 objects = objectSource.getObjects();
 
                 setStateOnUiThread();
-
             }
         }
 

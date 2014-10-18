@@ -14,11 +14,11 @@ public class VisibleObjectsObtainer {
     private ScreenPositionCalculator screenPositionCalculator;
 
     @Inject
-    private ObjectSourceManager objectSourceManager;
+    private ObjectsProvider objectsProvider;
 
     public List<ObjectOnScreen> getObjectsOnScreen() {
         List<ObjectOnScreen> objectsOnScreen = new LinkedList<ObjectOnScreen>();
-        List<ARObject> allObjects = objectSourceManager.getObjects();
+        List<ARObject> allObjects = objectsProvider.getObjects();
 
         for (ARObject object : allObjects) {
             PointF screenPos = screenPositionCalculator.calculateScreenPosition(object.getLocation());

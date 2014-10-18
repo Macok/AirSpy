@@ -41,6 +41,8 @@ public class AppStateMessageObtainer {
             ApplicationComponent blockingComponent = applicationController.getBlockingComponent();
             stateIdentifier = "message." + blockingComponent.getIdentifier() + "." + state.name();
             stateMessage = properties.getProperty(stateIdentifier);
+
+            Log.d("", "blockingComponent: " + blockingComponent.getIdentifier());
         }
 
         if (stateMessage == null) {
