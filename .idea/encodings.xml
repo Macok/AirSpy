@@ -3,7 +3,6 @@
   <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false">
     <file url="file://$PROJECT_DIR$/airspy/src/main/java/com/mac/airspy/ARObject.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/airspy/src/main/java/com/mac/airspy/ObjectOnScreen.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/airspy/src/main/java/com/mac/airspy/content/source/fr24/FRClient.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/airspy/src/main/java/com/mac/airspy/content/source/fr24/FlightRadarClient.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/airspy/src/main/java/com/mac/airspy/content/source/fr24/TrafficProcessor.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/airspy/src/main/java/com/mac/airspy/content/source/fr24/zone/Zone.java" charset="UTF-8" />

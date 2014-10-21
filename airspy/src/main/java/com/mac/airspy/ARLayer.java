@@ -20,19 +20,25 @@ import java.util.List;
 @ContextSingleton
 public class ARLayer extends BaseApplicationComponent implements SurfaceHolder.Callback {
 
+    private static final NumberFormat numberFormat = new DecimalFormat("#0.00");
+
     @InjectView(R.id.arLayerView)
     private SurfaceView arLayerView;
 
     @InjectView(R.id.textView3)
     private TextView fpsView;
 
+    @Inject
+    private ARLayerTouchListener touchListener;
+
+    @Inject
+    private ObjectDetailsDisplay objectDetailsDisplay;
+
     private View marker;
 
     private SurfaceHolder holder;
 
     private ScreenParameters screenParameters;
-
-    private NumberFormat numberFormat = new DecimalFormat("#0.00");
 
     @Inject
     public ARLayer(Context ctx) {
@@ -74,7 +80,12 @@ public class ARLayer extends BaseApplicationComponent implements SurfaceHolder.C
         TextView nameView = (TextView) marker.findViewById(R.id.textView);
         TextView distanceView = (TextView) marker.findViewById(R.id.textView2);
 
-        nameView.setText(object.getName());
+        if (objectDetailsDisplay.getCurrentObject() != null &&
+                objectDetailsDisplay.getCurrentObject().getId().equals(object.getId())) {
+            nameView.setText("AKTYWNY");
+        }else{
+            nameView.setText(object.getName());
+        }
 
         String distanceStr = numberFormat.format(object.getDistanceKm());
         distanceView.setText(distanceStr + " km");
@@ -91,6 +102,7 @@ public class ARLayer extends BaseApplicationComponent implements SurfaceHolder.C
         holder.addCallback(this);
 
         arLayerView.setZOrderOnTop(true);
+        arLayerView.setOnTouchListener(touchListener);
         holder.setFormat(PixelFormat.TRANSPARENT);
     }
 

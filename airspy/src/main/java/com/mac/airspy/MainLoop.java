@@ -26,6 +26,8 @@ public class MainLoop implements Runnable {
 
             if (ComponentState.READY == objectsProvider.getState()) {
                 arLayer.setFps(fpsCalculator.getFpsAndUpdate());
+
+                visibleObjectsObtainer.update();
                 arLayer.draw(visibleObjectsObtainer.getObjectsOnScreen());
             }
 

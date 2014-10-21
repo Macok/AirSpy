@@ -2,6 +2,7 @@ package com.mac.airspy;
 
 import android.graphics.PointF;
 import com.google.inject.Inject;
+import roboguice.inject.ContextSingleton;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -9,6 +10,8 @@ import java.util.List;
 /**
  * Created by Maciej on 2014-10-16.
  */
+
+@ContextSingleton
 public class VisibleObjectsObtainer {
     @Inject
     private ScreenPositionCalculator screenPositionCalculator;
@@ -16,7 +19,9 @@ public class VisibleObjectsObtainer {
     @Inject
     private ObjectsProvider objectsProvider;
 
-    public List<ObjectOnScreen> getObjectsOnScreen() {
+    private List<ObjectOnScreen> objectsOnScreen;
+
+    public void update() {
         List<ObjectOnScreen> objectsOnScreen = new LinkedList<ObjectOnScreen>();
         List<? extends ARObject> allObjects = objectsProvider.getObjects();
 
@@ -28,6 +33,10 @@ public class VisibleObjectsObtainer {
             objectsOnScreen.add(new ObjectOnScreen(object, screenPos));
         }
 
+        this.objectsOnScreen = objectsOnScreen;
+    }
+
+    public List<ObjectOnScreen> getObjectsOnScreen() {
         return objectsOnScreen;
     }
 }
