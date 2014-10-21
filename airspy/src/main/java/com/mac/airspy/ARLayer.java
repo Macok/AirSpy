@@ -9,6 +9,8 @@ import com.mac.airspy.parameters.ScreenParameters;
 import roboguice.inject.ContextSingleton;
 import roboguice.inject.InjectView;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.List;
 
 /**
@@ -29,6 +31,8 @@ public class ARLayer extends BaseApplicationComponent implements SurfaceHolder.C
     private SurfaceHolder holder;
 
     private ScreenParameters screenParameters;
+
+    private NumberFormat numberFormat = new DecimalFormat("#0.00");
 
     @Inject
     public ARLayer(Context ctx) {
@@ -71,7 +75,9 @@ public class ARLayer extends BaseApplicationComponent implements SurfaceHolder.C
         TextView distanceView = (TextView) marker.findViewById(R.id.textView2);
 
         nameView.setText(object.getName());
-        distanceView.setText(object.getDistanceKm() + " km");
+
+        String distanceStr = numberFormat.format(object.getDistanceKm());
+        distanceView.setText(distanceStr + " km");
 
         int spec = View.MeasureSpec.makeMeasureSpec(ViewGroup.LayoutParams.WRAP_CONTENT, View.MeasureSpec.UNSPECIFIED);
         marker.measure(spec, spec);

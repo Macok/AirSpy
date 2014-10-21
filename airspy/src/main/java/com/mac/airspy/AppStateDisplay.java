@@ -39,36 +39,6 @@ public class AppStateDisplay implements ApplicationComponent.StateChangedListene
         createErrorDialog();
     }
 
-    private void createErrorDialog() {
-        errorDialog = new AlertDialog.Builder(activity)
-                .setTitle("Error")
-                .setMessage("Error message")
-                .setCancelable(false)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        finishActivity();
-                    }
-                })
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .create();
-    }
-
-    private void createLoadingDialog() {
-        loadingDialog = new ProgressDialog(activity);
-        loadingDialog.setCanceledOnTouchOutside(false);
-        loadingDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                finishActivity();
-            }
-        });
-
-    }
-
-    private void finishActivity() {
-        activity.finish();
-    }
-
     @Override
     public void onStateChanged(ApplicationComponent component, ComponentState newState) {
         if (dismissed) {
@@ -99,5 +69,42 @@ public class AppStateDisplay implements ApplicationComponent.StateChangedListene
 
         loadingDialog.dismiss();
         errorDialog.dismiss();
+    }
+
+    private void createErrorDialog() {
+        errorDialog = new AlertDialog.Builder(activity)
+                .setTitle("Error")
+                .setMessage("")
+                .setPositiveButton(R.string.quit, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        finishActivity();
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .create();
+
+        errorDialog.setCanceledOnTouchOutside(false);
+        errorDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                finishActivity();
+            }
+        });
+    }
+
+    private void createLoadingDialog() {
+        loadingDialog = new ProgressDialog(activity);
+        loadingDialog.setCanceledOnTouchOutside(false);
+        loadingDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                finishActivity();
+            }
+        });
+
+    }
+
+    private void finishActivity() {
+        activity.finish();
     }
 }
