@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class TestObjectSource implements ObjectSource {
     @Override
-    public List<ARObject> getObjects() {
+    public List<? extends ARObject> getObjects() {
         List<ARObject> list = new ArrayList<ARObject>();
 
         SimpleLocation palacKultury = new SimpleLocation(21.006111, 52.231667, 120);

@@ -1,5 +1,6 @@
 package com.mac.airspy;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Looper;
 import com.google.inject.Inject;
@@ -16,23 +17,25 @@ public abstract class BaseApplicationComponent implements ApplicationComponent {
     private StateChangedListener stateListener;
 
     protected void setState(ComponentState state) {
-        if (Looper.myLooper() != Looper.getMainLooper()) {
-            throw new IllegalStateException("setState called outside UI thread");
-        }
-
         if (this.state != state) {
             doSetState(state);
         }
     }
 
-    protected void doSetState(ComponentState state) {
+    protected void doSetState(final ComponentState state) {
+        Activity activity = (Activity) ctx;
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                BaseApplicationComponent.this.state = state;
 
-        this.state = state;
-
-        if (stateListener != null) {
-            stateListener.onStateChanged(this, state);
-        }
+                if (stateListener != null) {
+                    stateListener.onStateChanged(BaseApplicationComponent.this, state);
+                }
+            }
+        });
     }
+
 
     @Override
     public String getIdentifier() {

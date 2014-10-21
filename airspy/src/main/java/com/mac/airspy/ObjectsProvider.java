@@ -1,12 +1,13 @@
 package com.mac.airspy;
 
-import android.app.Activity;
+import android.util.Log;
 import com.mac.airspy.content.ObjectSource;
 import com.mac.airspy.content.source.fr24.FRObjectSource;
 import com.mac.airspy.content.source.test.TestObjectSource;
 import roboguice.RoboGuice;
 import roboguice.inject.ContextSingleton;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.*;
 
@@ -17,9 +18,11 @@ import java.util.concurrent.*;
 @ContextSingleton
 public class ObjectsProvider extends BaseApplicationComponent {
 
+    public static final int OBJECTS_UPDATE_INTERVAL_SECONDS = 60;
+
     private ScheduledExecutorService executor;
 
-    private List<ARObject> objects;
+    private List<? extends ARObject> objects;
 
     private ObjectSource objectSource;
 
@@ -33,7 +36,7 @@ public class ObjectsProvider extends BaseApplicationComponent {
 
         currentUpdateCommand = new UpdateObjectsCommand(objectSource);
         executor = Executors.newSingleThreadScheduledExecutor();
-        executor.scheduleAtFixedRate(currentUpdateCommand, 0, 20, TimeUnit.SECONDS);
+        executor.scheduleAtFixedRate(currentUpdateCommand, 0, OBJECTS_UPDATE_INTERVAL_SECONDS, TimeUnit.SECONDS);
     }
 
     public void stop() {
@@ -49,9 +52,10 @@ public class ObjectsProvider extends BaseApplicationComponent {
         }
     }
 
-    public List<ARObject> getObjects() {
+    public List<? extends ARObject> getObjects() {
         return objects;
     }
+
 
     private class UpdateObjectsCommand implements Runnable {
         private final ObjectSource objectSource;
@@ -65,24 +69,20 @@ public class ObjectsProvider extends BaseApplicationComponent {
         @Override
         public void run() {
             if (!cancelled) {
-                objects = objectSource.getObjects();
+                try {
+                    objects = objectSource.getObjects();
+                } catch (IOException e) {
+                    Log.e("", "", e);
+                    setState(ComponentState.ERROR);
+                    cancel();
+                }
 
-                setStateOnUiThread();
+                setState(ComponentState.READY);
             }
         }
 
         public void cancel() {
             cancelled = true;
         }
-    }
-
-    private void setStateOnUiThread() {
-        Activity activity = (Activity) ctx;
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                setState(ComponentState.READY);
-            }
-        });
     }
 }

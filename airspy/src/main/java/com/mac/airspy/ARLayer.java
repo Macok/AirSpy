@@ -58,9 +58,6 @@ public class ARLayer extends BaseApplicationComponent implements SurfaceHolder.C
         for (ObjectOnScreen object : objects) {
             canvas.save();
             canvas.translate(object.position.x, object.position.y);
-            Paint paint = new Paint();
-            paint.setColor(0xffff0000);
-            canvas.drawCircle(0, 0, 20, paint);
 
             View marker = getMarkerForObject(object.object);
             canvas.translate(-marker.getWidth() / 2f, -marker.getHeight());

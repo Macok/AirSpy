@@ -7,7 +7,6 @@ import com.mac.airspy.content.ObjectSource;
 import com.mac.airspy.content.source.fr24.zone.ZoneResolver;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,16 +17,20 @@ public class FRObjectSource implements ObjectSource {
     @Inject
     private ZoneResolver zoneResolver;
 
+    @Inject
+    private TrafficProcessor trafficProcessor;
+
+    private String currentZone;
+
     @Override
-    public List<ARObject> getObjects() {
+    public List<? extends ARObject> getObjects() throws IOException {
 
-        try {
-            String currentZone = zoneResolver.getCurrentZone();
-            Log.d("ZONE", currentZone);
-        } catch (IOException e) {
-            Log.e("", "", e);
+        if (currentZone == null) {
+            currentZone = zoneResolver.getCurrentZone();
         }
+        Log.d("ZONE", currentZone);
 
-        return new ArrayList<>();
+
+        return trafficProcessor.getPlanes(100, currentZone);
     }
 }

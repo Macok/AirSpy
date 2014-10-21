@@ -8,14 +8,12 @@ import com.mac.airspy.location.SimpleLocation;
  */
 public class Plane implements ARObject{
 
-    private final String hex;
+    private String hex;
     private SimpleLocation location;
     private Double distanceKm;
+    private String callsign;
 
-    public Plane(String hex, SimpleLocation location, Double distanceKm) {
-        this.hex = hex;
-        this.location = location;
-        this.distanceKm = distanceKm;
+    public Plane() {
     }
 
     @Override
@@ -28,6 +26,10 @@ public class Plane implements ARObject{
         return hex;
     }
 
+    public void setLocation(SimpleLocation location) {
+        this.location = location;
+    }
+
     @Override
     public double getDistanceKm() {
         return distanceKm;
@@ -36,5 +38,21 @@ public class Plane implements ARObject{
     @Override
     public SimpleLocation getLocation() {
         return location;
+    }
+
+    public void setDistanceKm(Double distanceKm) {
+        this.distanceKm = distanceKm;
+    }
+
+    public void setHex(String hex) {
+        this.hex = hex;
+    }
+
+    public void setCallsign(String callsign) {
+        this.callsign = callsign;
+    }
+
+    public String getCallsign() {
+        return callsign;
     }
 }
