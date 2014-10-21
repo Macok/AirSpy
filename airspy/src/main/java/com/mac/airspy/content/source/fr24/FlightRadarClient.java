@@ -1,6 +1,13 @@
 package com.mac.airspy.content.source.fr24;
 
 import android.util.Log;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,7 +28,16 @@ public class FlightRadarClient {
             FLIGHTRADAR_DB_URL + "/_external/planedata_json.1.4.php?hex=";
 
     public static final int CONNECT_TIMEOUT_MILLIS = 5000;
-    public static final int READ_TIMEOUT_MILLIS = 8000;
+    public static final int SOCKET_TIMEOUT_MILLIS = 1000;
+    private HttpClient httpClient;
+
+    public FlightRadarClient() {
+        HttpParams params = new BasicHttpParams();
+        HttpConnectionParams.setConnectionTimeout(params, CONNECT_TIMEOUT_MILLIS);
+        HttpConnectionParams.setSoTimeout(params, SOCKET_TIMEOUT_MILLIS);
+
+        httpClient = new DefaultHttpClient(params);
+    }
 
     public InputStream getTrafficStream(String zone) throws IOException{
         String urlStr = FLIGHTRADAR_DATA_URL.replace("ZONE_NAME", zone);
@@ -39,14 +55,10 @@ public class FlightRadarClient {
     }
 
     private InputStream openStream(String urlStr) throws IOException {
-        try {
-            HttpURLConnection connection = (HttpURLConnection) new URL(urlStr).openConnection();
-            connection.setConnectTimeout(CONNECT_TIMEOUT_MILLIS);
-            connection.setReadTimeout(READ_TIMEOUT_MILLIS);
-            return connection.getInputStream();
-        } catch (IOException e) {
-            Log.e(TAG, "openStream", e);
-            throw e;
-        }
+        HttpGet httpGet = new HttpGet(urlStr);
+
+        HttpResponse response = httpClient.execute(httpGet);
+
+        return response.getEntity().getContent();
     }
 }

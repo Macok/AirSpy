@@ -75,6 +75,7 @@ public class ObjectsProvider extends BaseApplicationComponent {
                     Log.e("", "", e);
                     setState(ComponentState.ERROR);
                     cancel();
+                    return;
                 }
 
                 setState(ComponentState.READY);

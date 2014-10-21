@@ -119,11 +119,11 @@ public class ApplicationController extends BaseApplicationComponent
         updateAppState();
 
         if (firstPhaseReady() && starting) {
-            if (!componentStarted(mainLoopController)) {
+            if (ComponentState.STOPPED == mainLoopController.getState()) {
                 mainLoopController.start();
             }
 
-            if (!componentStarted(objectsProvider)) {
+            if (ComponentState.STOPPED == objectsProvider.getState()) {
                 objectsProvider.start();
             }
         }

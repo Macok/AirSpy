@@ -1,11 +1,10 @@
 package com.mac.airspy;
 
-import android.app.Dialog;
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Looper;
-import android.util.Log;
 import com.google.inject.Inject;
 import roboguice.inject.ContextSingleton;
 
@@ -16,60 +15,89 @@ import roboguice.inject.ContextSingleton;
 @ContextSingleton
 public class AppStateDisplay implements ApplicationComponent.StateChangedListener {
 
-    private final MainActivity activity;
+    private final Activity activity;
 
     private final ApplicationController applicationController;
 
     @Inject
     private AppStateMessageObtainer stateMessageObtainer;
 
-    private ProgressDialog dialog;
+    private ProgressDialog loadingDialog;
+    private AlertDialog errorDialog;
+
+    private boolean dismissed;
 
     @Inject
     public AppStateDisplay(Context activity, ApplicationController applicationController) {
-        this.activity = (MainActivity) activity;
+        this.activity = (Activity) activity;
         this.applicationController = applicationController;
 
         applicationController.setStateListener(this);
+
+        createLoadingDialog();
+
+        createErrorDialog();
     }
 
-    private ProgressDialog createDialog() {
-        ProgressDialog dialog = new ProgressDialog(activity);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+    private void createErrorDialog() {
+        errorDialog = new AlertDialog.Builder(activity)
+                .setTitle("Error")
+                .setMessage("Error message")
+                .setCancelable(false)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        finishActivity();
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .create();
+    }
+
+    private void createLoadingDialog() {
+        loadingDialog = new ProgressDialog(activity);
+        loadingDialog.setCanceledOnTouchOutside(false);
+        loadingDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-                AppStateDisplay.this.activity.finish();
+                finishActivity();
             }
         });
 
-        return dialog;
+    }
+
+    private void finishActivity() {
+        activity.finish();
     }
 
     @Override
     public void onStateChanged(ApplicationComponent component, ComponentState newState) {
-        if (dialog == null) {
-            //disabled
+        if (dismissed) {
             return;
         }
 
         String message = stateMessageObtainer.getCurrentStateMessage();
 
-        if (newState == ComponentState.READY) {
-            dialog.hide();
-        } else {
-            dialog.show();
+        switch (newState) {
+            case READY:
+                loadingDialog.hide();
+                errorDialog.hide();
+                break;
+            case ERROR:
+                loadingDialog.hide();
+                errorDialog.show();
+                errorDialog.setMessage(message);
+                break;
+            default:
+                errorDialog.hide();
+                loadingDialog.show();
+                loadingDialog.setMessage(message);
         }
-
-        dialog.setMessage(message);
     }
 
-    public void setEnabled(boolean enabled) {
-        if (enabled) {
-            dialog = createDialog();
-        } else {
-            dialog.dismiss();
-            dialog = null;
-        }
+    public void dismiss() {
+        dismissed = true;
+
+        loadingDialog.dismiss();
+        errorDialog.dismiss();
     }
 }
