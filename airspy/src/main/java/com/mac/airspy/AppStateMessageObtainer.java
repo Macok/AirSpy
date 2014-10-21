@@ -35,7 +35,7 @@ public class AppStateMessageObtainer {
     public String getCurrentStateMessage() {
         ComponentState state = applicationController.getState();
 
-        String stateIdentifier;
+        String stateIdentifier=null;
         String stateMessage = null;
         if (ComponentState.READY != state) {
             ApplicationComponent blockingComponent = applicationController.getBlockingComponent();
