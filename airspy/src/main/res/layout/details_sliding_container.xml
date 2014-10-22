@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:background="#ffffffff"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <LinearLayout
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="70dp">
+        <FrameLayout
+                android:visibility="gone"
+                android:id="@+id/objectInfoContainer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#ffff0000"/>
+        <ProgressBar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/objectInfoProgressBar"
+                android:layout_gravity="center_vertical"/>
+    </LinearLayout>
+
+    <LinearLayout
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+        <ProgressBar
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/objectDetailsProgressBar"
+                android:layout_gravity="center_vertical"/>
+        <ScrollView
+                android:visibility="gone"
+                android:id="@+id/objectDetailsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#ff00ff00">
+        </ScrollView>
+    </LinearLayout>
+</LinearLayout>

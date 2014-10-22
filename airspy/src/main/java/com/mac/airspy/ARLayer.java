@@ -80,12 +80,13 @@ public class ARLayer extends BaseApplicationComponent implements SurfaceHolder.C
         TextView nameView = (TextView) marker.findViewById(R.id.textView);
         TextView distanceView = (TextView) marker.findViewById(R.id.textView2);
 
-        if (objectDetailsDisplay.getCurrentObject() != null &&
-                objectDetailsDisplay.getCurrentObject().getId().equals(object.getId())) {
-            nameView.setText("AKTYWNY");
+        if (hasFocus(object)) {
+            marker.setBackgroundResource(R.drawable.bg_active);
         }else{
-            nameView.setText(object.getName());
+            marker.setBackgroundResource(R.drawable.bg);
         }
+
+        nameView.setText(object.getName());
 
         String distanceStr = numberFormat.format(object.getDistanceKm());
         distanceView.setText(distanceStr + " km");
@@ -97,11 +98,17 @@ public class ARLayer extends BaseApplicationComponent implements SurfaceHolder.C
         return marker;
     }
 
+    private boolean hasFocus(ARObject object) {
+        ARObject objectWithFocus = objectDetailsDisplay.getCurrentObject();
+        return objectWithFocus != null &&
+                objectWithFocus.getId().equals(object.getId());
+    }
+
     public void init() {
         holder = arLayerView.getHolder();
         holder.addCallback(this);
 
-        arLayerView.setZOrderOnTop(true);
+        //arLayerView.setZOrderOnTop(true); TODO kolejnosc w RelativeLayout
         arLayerView.setOnTouchListener(touchListener);
         holder.setFormat(PixelFormat.TRANSPARENT);
     }

@@ -52,4 +52,5 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-core:2.4.3'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.4.3'
     compile 'org.apache.httpcomponents:httpclient:4.3.5'
+    compile 'com.sothree.slidinguppanel:library:+'
 }

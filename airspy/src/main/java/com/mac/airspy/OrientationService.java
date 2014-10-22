@@ -62,10 +62,6 @@ public class OrientationService extends BaseApplicationComponent implements Sens
     }
 
     public float[] getOrientation() {
-        if (state != ComponentState.READY) {
-            throw new IllegalStateException("not initialized");
-        }
-
         SensorManager.getRotationMatrixFromVector(rotationMatrix, sensorValues);
 
         SensorManager.remapCoordinateSystem(rotationMatrix,

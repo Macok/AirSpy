@@ -41,9 +41,12 @@ public class ARLayerTouchListener implements View.OnTouchListener {
             ObjectOnScreen nearestObject = getNearestObject(event);
             if (nearestObject != null) {
                 if (calculateDistance(nearestObject, event) < OBJECT_SELECTION_RADIUS_PX) {
-                    objectDetailsDisplay.showObjectDetails(nearestObject.object);
+                    objectDetailsDisplay.showObjectInfo(nearestObject.object);
+                    return false;
                 }
             }
+
+            objectDetailsDisplay.hide();
         }
 
         return false;

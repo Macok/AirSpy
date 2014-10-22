@@ -10,7 +10,9 @@ import android.util.Log;
 import com.google.inject.Inject;
 import com.mac.airspy.location.BackgroundLocationService;
 import com.mac.airspy.location.LocationService;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import roboguice.activity.RoboActivity;
+import roboguice.inject.InjectView;
 
 
 public class MainActivity extends RoboActivity {
@@ -21,6 +23,9 @@ public class MainActivity extends RoboActivity {
     @Inject
     private AppStateDisplay appStateDisplay;
 
+    @Inject
+    private ObjectDetailsDisplay detailsDisplay;
+
     /**
      * Called when the activity is starting. Restores the activity state.
      */
@@ -29,6 +34,8 @@ public class MainActivity extends RoboActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+
+        detailsDisplay.init();
 
         applicationController.create();
     }
@@ -57,8 +64,6 @@ public class MainActivity extends RoboActivity {
     @Override
     protected void onStop() {
         applicationController.stop();
-
-
 
         super.onStop();
     }
