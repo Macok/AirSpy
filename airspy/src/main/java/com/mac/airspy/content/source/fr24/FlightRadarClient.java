@@ -11,8 +11,6 @@ import org.apache.http.params.HttpParams;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 /**
  * Created by Maciej on 08.01.14.
@@ -20,12 +18,15 @@ import java.net.URL;
 public class FlightRadarClient {
     private static final String TAG = FlightRadarClient.class.getSimpleName();
 
-    public static final String FLIGHTRADAR_URL = "http://www.flightradar24.com";
-    public static final String FLIGHTRADAR_DB_URL = "http://bma.data.fr24.com";
-    private static final String FLIGHTRADAR_ZONES_URL = FLIGHTRADAR_URL + "/js/zones.js.php";
-    private static final String FLIGHTRADAR_DATA_URL = FLIGHTRADAR_DB_URL + "/zones/ZONE_NAME_all.json";
-    private static final String FLIGHTRADAR_PLANEDATA_URL =
-            FLIGHTRADAR_DB_URL + "/_external/planedata_json.1.4.php?hex=";
+    private static final String FR_URL = "http://www.flightradar24.com";
+    private static final String FR_DB_URL = "http://bma.data.fr24.com";
+    private static final String FR_ZONES_URL = FR_URL + "/js/zones.js.php";
+    private static final String FR_DATA_URL = FR_DB_URL + "/zones/ZONE_NAME_all.json";
+    private static final String FR_PLANEDATA_URL =
+            FR_DB_URL + "/_external/planedata_json.1.4.php?hex=";
+
+    public static final String FR_AIRCRAFT_THUMBNAIL_URL =
+            "http://flightradar24static.appspot.com/static/_fr24/images/sideviews/AIRCRAFT_CODE.png";
 
     public static final int CONNECT_TIMEOUT_MILLIS = 5000;
     public static final int SOCKET_TIMEOUT_MILLIS = 1000;
@@ -40,16 +41,16 @@ public class FlightRadarClient {
     }
 
     public InputStream getTrafficStream(String zone) throws IOException{
-        String urlStr = FLIGHTRADAR_DATA_URL.replace("ZONE_NAME", zone);
+        String urlStr = FR_DATA_URL.replace("ZONE_NAME", zone);
         return openStream(urlStr);
     }
 
     public InputStream getZonesStream() throws IOException {
-        return openStream(FLIGHTRADAR_ZONES_URL);
+        return openStream(FR_ZONES_URL);
     }
 
     public InputStream getPlaneDataStream(String hex) throws IOException {
-        String url = FLIGHTRADAR_PLANEDATA_URL + hex;
+        String url = FR_PLANEDATA_URL + hex;
         Log.d(TAG, url);
         return openStream(url);
     }

@@ -85,6 +85,7 @@
     <orderEntry type="library" exported="" name="aopalliance-1.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-5.2.08" level="project" />
     <orderEntry type="library" exported="" name="support-v4-20.0.0" level="project" />
+    <orderEntry type="library" exported="" name="commons-lang3-3.3.2" level="project" />
     <orderEntry type="library" exported="" name="asm-3.1" level="project" />
     <orderEntry type="library" exported="" name="jackson-annotations-2.4.0" level="project" />
     <orderEntry type="library" exported="" name="cglib-2.2.1-v20090111" level="project" />
