@@ -26,7 +26,7 @@ public class VisibleObjectsObtainer {
         List<? extends ARObject> allObjects = objectsProvider.getObjects();
 
         for (ARObject object : allObjects) {
-            PointF screenPos = screenPositionCalculator.calculateScreenPosition(object.getLocation());
+            PointF screenPos = screenPositionCalculator.calculateScreenPosition(object);
             if (screenPos == null)
                 continue;
 

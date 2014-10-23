@@ -87,9 +87,6 @@ public class BackgroundLocationService extends RoboService implements
 
     @Override
     public void onConnected(Bundle bundle) {
-        //TODO usunac
-        Toast.makeText(this, "Connected", Toast.LENGTH_SHORT).show();
-
         errorMessage = null;
 
         locationClient.requestLocationUpdates(locationRequest, this);

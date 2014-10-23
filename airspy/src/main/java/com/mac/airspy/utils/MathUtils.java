@@ -1,6 +1,8 @@
 package com.mac.airspy.utils;
 
 
+import com.mac.airspy.ARObject;
+import com.mac.airspy.MovingARObject;
 import com.mac.airspy.location.SimpleLocation;
 
 /**
@@ -10,6 +12,7 @@ public class MathUtils {
     public static final double FEET_TO_METERS = 0.3048;
     public static final double KNOTS_TO_KMH = 1.852;
     public static final int EARTH_RADIUS = 6371;
+    public static final long MILLIS_IN_HOUR = 3600 * 1000;
 
     public static double knotsToKmh(double knots) {
         return knots * KNOTS_TO_KMH;
@@ -17,6 +20,17 @@ public class MathUtils {
 
     public static double feetToMeters(double feet) {
         return feet * FEET_TO_METERS;
+    }
+
+    public static Vector3D calculateApproximatedDistanceVector(SimpleLocation l1, ARObject object) {
+        Vector3D distanceVector = calculateDistanceVector(l1, object.getLocation());
+
+        if (object instanceof MovingARObject) {
+            Vector3D dislocationVector = calculateDislocation((MovingARObject) object);
+            return distanceVector.add(dislocationVector);
+        }
+
+        return distanceVector;
     }
 
     public static Vector3D calculateDistanceVector(SimpleLocation l1, SimpleLocation l2) {
@@ -43,5 +57,16 @@ public class MathUtils {
         double distZ = l2.getAltitude()-l1.getAltitude();
 
         return new Vector3D(distX, distY, distZ);
+    }
+
+    private static Vector3D calculateDislocation(MovingARObject object) {
+        long dt = System.currentTimeMillis() - object.getLastUpdateTime();
+        double distanceCovered = object.getSpeedKmh() * ((double) dt / MILLIS_IN_HOUR);
+
+        double track = Math.toRadians(object.getTrack());
+        double dx = Math.sin(track) * distanceCovered;
+        double dy = Math.cos(track) * distanceCovered;
+
+        return new Vector3D(dx, dy, 0);
     }
 }

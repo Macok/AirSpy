@@ -33,23 +33,23 @@ public class ScreenPositionCalculator {
     private ScreenParameters screenParameters;
     private CameraParameters cameraParameters;
 
-    public PointF calculateScreenPosition(SimpleLocation targetLocation) {
+    public PointF calculateScreenPosition(ARObject target) {
         if (!initialized) {
             screenParameters = arLayer.getScreenParameters();
             cameraParameters = cameraController.getCameraParameters();
             initialized = true;
         }
 
-        return doCalculateScreenPosition(targetLocation);
+        return doCalculateScreenPosition(target);
     }
 
-    private PointF doCalculateScreenPosition(SimpleLocation targetLocation) {
+    private PointF doCalculateScreenPosition(ARObject target) {
 
         SimpleLocation observerLocation = locationService.getLocation();
 
         float[] orientationValues = orientationService.getOrientation();
 
-        Vector3D distanceVector = MathUtils.calculateDistanceVector(observerLocation, targetLocation);
+        Vector3D distanceVector = MathUtils.calculateApproximatedDistanceVector(observerLocation, target);
 
         double distX = distanceVector.getX();
         double distY = distanceVector.getY();

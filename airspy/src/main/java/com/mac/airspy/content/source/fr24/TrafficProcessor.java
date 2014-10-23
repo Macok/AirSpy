@@ -98,7 +98,10 @@ public class TrafficProcessor {
 
         String registration = jp.getValueAsString();
 
-        jp.nextToken(); //timestamp
+        jp.nextToken(); //timestamp seconds
+
+        long timestampSeconds = jp.getValueAsLong();
+
         jp.nextToken(); //from
 
         String from = jp.getValueAsString();
@@ -146,6 +149,8 @@ public class TrafficProcessor {
         plane.setFromCode(from);
         plane.setToCode(to);
         plane.setSpeedKmh(speedKmh);
+        plane.setTrack(track);
+        plane.setDataTimestamp(timestampSeconds * 1000);
 
         return plane;
     }

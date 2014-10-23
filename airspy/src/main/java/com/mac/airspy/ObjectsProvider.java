@@ -1,6 +1,8 @@
 package com.mac.airspy;
 
+import android.app.Activity;
 import android.util.Log;
+import android.widget.Toast;
 import com.mac.airspy.content.ObjectDetailsViewProvider;
 import com.mac.airspy.content.ObjectSource;
 import com.mac.airspy.content.source.fr24.FRObjectSource;
@@ -18,7 +20,7 @@ import java.util.concurrent.*;
 @ContextSingleton
 public class ObjectsProvider extends BaseApplicationComponent {
 
-    public static final int OBJECTS_UPDATE_INTERVAL_SECONDS = 60;
+    public static final int OBJECTS_UPDATE_INTERVAL_SECONDS = 6000;
 
     private ScheduledExecutorService executor;
 
@@ -77,6 +79,15 @@ public class ObjectsProvider extends BaseApplicationComponent {
                     cancel();
                     return;
                 }
+
+                //todo delete
+                ((Activity)ctx).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(ctx, "Objects updated", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
 
                 setState(ComponentState.READY);
             }

@@ -1,13 +1,14 @@
 package com.mac.airspy.content.source.fr24;
 
 import com.mac.airspy.ARObject;
+import com.mac.airspy.MovingARObject;
 import com.mac.airspy.location.SimpleLocation;
 import org.apache.commons.lang3.StringUtils;
 
 /**
  * Created by Maciej on 2014-10-18.
  */
-public class Plane implements ARObject{
+public class Plane implements MovingARObject{
 
     private String hex;
     private SimpleLocation location;
@@ -19,6 +20,8 @@ public class Plane implements ARObject{
     private String fromCode;
     private String toCode;
     private double speedKmh;
+    private double track;
+    private long dataTimestamp;
 
     public Plane() {
     }
@@ -51,6 +54,21 @@ public class Plane implements ARObject{
     @Override
     public SimpleLocation getLocation() {
         return location;
+    }
+
+    @Override
+    public double getSpeedKmh() {
+        return speedKmh;
+    }
+
+    @Override
+    public double getTrack() {
+        return track;
+    }
+
+    @Override
+    public long getLastUpdateTime() {
+        return dataTimestamp;
     }
 
     public void setDistanceKm(Double distanceKm) {
@@ -113,7 +131,15 @@ public class Plane implements ARObject{
         this.speedKmh = speedKmh;
     }
 
-    public double getSpeedKmh() {
-        return speedKmh;
+    public void setTrack(double track) {
+        this.track = track;
+    }
+
+    public void setDataTimestamp(long dataTimestamp) {
+        this.dataTimestamp = dataTimestamp;
+    }
+
+    public long getDataTimestamp() {
+        return dataTimestamp;
     }
 }

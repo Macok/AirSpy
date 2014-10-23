@@ -2,11 +2,7 @@ package com.mac.airspy;
 
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import com.google.inject.Inject;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import roboguice.inject.ContextSingleton;
 import roboguice.inject.InjectView;
@@ -18,6 +14,8 @@ import roboguice.util.SafeAsyncTask;
 
 @ContextSingleton
 public class ObjectDetailsDisplay implements SlidingUpPanelLayout.PanelSlideListener {
+
+    private static final int DOUBLE_CLICK_INTERVAL_MILLIS = 300;
 
     @InjectView(R.id.sliding_layout)
     private SlidingUpPanelLayout slidingLayout;
@@ -41,17 +39,43 @@ public class ObjectDetailsDisplay implements SlidingUpPanelLayout.PanelSlideList
 
     private LoadObjectInfoTask currentObjectInfoTask;
 
+    private long lastObjectChangeTime = 0;
+
     public void init() {
         slidingLayout.setPanelSlideListener(this);
-        setSlidingPanelVisible(false);
+
+        //AndroidSlidingUpPanel bug walkaroung
+        slidingLayout.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                slidingLayout.hidePanel();
+            }
+        }, 1000);
     }
 
     public void showObjectInfo(ARObject object) {
+        if (!intervalElapsed()) {
+            return; //ignore double clicks
+        }
+
+        stopCurrentTasks();
 
         currentObject = object;
         setSlidingPanelVisible(true);
 
-        new LoadObjectInfoTask().execute();
+        currentObjectInfoTask = new LoadObjectInfoTask();
+        currentObjectInfoTask.execute();
+
+    }
+
+    private boolean intervalElapsed() {
+        long time = System.currentTimeMillis();
+        if (time - lastObjectChangeTime > DOUBLE_CLICK_INTERVAL_MILLIS) {
+            lastObjectChangeTime = time;
+            return true;
+        }
+
+        return false;
     }
 
     public ARObject getCurrentObject() {
@@ -59,8 +83,23 @@ public class ObjectDetailsDisplay implements SlidingUpPanelLayout.PanelSlideList
     }
 
     public void hide() {
+        if (!intervalElapsed()) {
+            return;
+        }
+
+        stopCurrentTasks();
+
         currentObject = null;
         setSlidingPanelVisible(false);
+    }
+
+    private void stopCurrentTasks() {
+        if (currentObjectInfoTask != null) {
+            currentObjectInfoTask.cancel(false);
+            currentObjectInfoTask = null;
+        }
+
+        //todo stop loadDetails task
     }
 
     @Override
@@ -91,11 +130,6 @@ public class ObjectDetailsDisplay implements SlidingUpPanelLayout.PanelSlideList
     private class LoadObjectInfoTask extends SafeAsyncTask<View> {
         @Override
         protected void onPreExecute() throws Exception {
-            if (currentObjectInfoTask != null) {
-                currentObjectInfoTask.cancel(true);
-            }
-            currentObjectInfoTask = this;
-
             objectInfoContainer.setVisibility(View.GONE);
             objectDetailsContainer.setVisibility(View.GONE);
             objectInfoProgressBar.setVisibility(View.VISIBLE);
@@ -118,9 +152,7 @@ public class ObjectDetailsDisplay implements SlidingUpPanelLayout.PanelSlideList
     }
 
     private void setSlidingPanelVisible(final boolean visible) {
-
-        //SlidingUpPanelLayout bug walkaround
-        slidingLayout.postDelayed(new Runnable() {
+        slidingLayout.post(new Runnable() {
             @Override
             public void run() {
                 if (visible) {
@@ -129,6 +161,6 @@ public class ObjectDetailsDisplay implements SlidingUpPanelLayout.PanelSlideList
                     slidingLayout.hidePanel();
                 }
             }
-        }, 20);
+        });
     }
 }
