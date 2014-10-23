@@ -1,9 +1,9 @@
 package com.mac.airspy;
 
 import android.util.Log;
+import com.mac.airspy.content.ObjectDetailsViewProvider;
 import com.mac.airspy.content.ObjectSource;
 import com.mac.airspy.content.source.fr24.FRObjectSource;
-import com.mac.airspy.content.source.test.TestObjectSource;
 import roboguice.RoboGuice;
 import roboguice.inject.ContextSingleton;
 
@@ -56,10 +56,10 @@ public class ObjectsProvider extends BaseApplicationComponent {
         return objects;
     }
 
-
     private class UpdateObjectsCommand implements Runnable {
-        private final ObjectSource objectSource;
 
+
+        private final ObjectSource objectSource;
         private boolean cancelled;
 
         private UpdateObjectsCommand(ObjectSource objectSource) {
@@ -85,5 +85,10 @@ public class ObjectsProvider extends BaseApplicationComponent {
         public void cancel() {
             cancelled = true;
         }
+
+    }
+
+    public ObjectDetailsViewProvider getDetailsProvider() {
+        return objectSource.getDetailsProvider();
     }
 }

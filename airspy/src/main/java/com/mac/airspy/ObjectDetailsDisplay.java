@@ -2,11 +2,15 @@ package com.mac.airspy;
 
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import com.google.inject.Inject;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import roboguice.inject.ContextSingleton;
 import roboguice.inject.InjectView;
+import roboguice.util.SafeAsyncTask;
 
 /**
  * Created by Maciej on 2014-10-21.
@@ -30,7 +34,12 @@ public class ObjectDetailsDisplay implements SlidingUpPanelLayout.PanelSlideList
     @InjectView(R.id.objectDetailsProgressBar)
     private View objectDetailsProgressBar;
 
+    @Inject
+    private ObjectsProvider objectsProvider;
+
     private ARObject currentObject;
+
+    private LoadObjectInfoTask currentObjectInfoTask;
 
     public void init() {
         slidingLayout.setPanelSlideListener(this);
@@ -42,7 +51,7 @@ public class ObjectDetailsDisplay implements SlidingUpPanelLayout.PanelSlideList
         currentObject = object;
         setSlidingPanelVisible(true);
 
-        //todo load objectInfoContainer
+        new LoadObjectInfoTask().execute();
     }
 
     public ARObject getCurrentObject() {
@@ -79,6 +88,35 @@ public class ObjectDetailsDisplay implements SlidingUpPanelLayout.PanelSlideList
 
     }
 
+    private class LoadObjectInfoTask extends SafeAsyncTask<View> {
+        @Override
+        protected void onPreExecute() throws Exception {
+            if (currentObjectInfoTask != null) {
+                currentObjectInfoTask.cancel(true);
+            }
+            currentObjectInfoTask = this;
+
+            objectInfoContainer.setVisibility(View.GONE);
+            objectDetailsContainer.setVisibility(View.GONE);
+            objectInfoProgressBar.setVisibility(View.VISIBLE);
+            objectDetailsProgressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        public View call() throws Exception {
+            return objectsProvider.getDetailsProvider().getInfoView(currentObject);
+        }
+
+        @Override
+        protected void onSuccess(View view) throws Exception {
+            objectInfoContainer.removeAllViews();
+            objectInfoContainer.addView(view);
+
+            objectInfoProgressBar.setVisibility(View.GONE);
+            objectInfoContainer.setVisibility(View.VISIBLE);
+        }
+    }
+
     private void setSlidingPanelVisible(final boolean visible) {
 
         //SlidingUpPanelLayout bug walkaround
@@ -91,6 +129,6 @@ public class ObjectDetailsDisplay implements SlidingUpPanelLayout.PanelSlideList
                     slidingLayout.hidePanel();
                 }
             }
-        }, 10);
+        }, 20);
     }
 }

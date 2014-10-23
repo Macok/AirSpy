@@ -15,8 +15,7 @@
                 android:visibility="gone"
                 android:id="@+id/objectInfoContainer"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#ffff0000"/>
+                android:layout_height="match_parent"/>
         <ProgressBar
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

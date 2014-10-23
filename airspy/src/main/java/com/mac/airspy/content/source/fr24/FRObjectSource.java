@@ -1,8 +1,11 @@
 package com.mac.airspy.content.source.fr24;
 
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 import com.google.inject.Inject;
 import com.mac.airspy.ARObject;
+import com.mac.airspy.content.ObjectDetailsViewProvider;
 import com.mac.airspy.content.ObjectSource;
 import com.mac.airspy.content.source.fr24.zone.ZoneResolver;
 
@@ -20,6 +23,9 @@ public class FRObjectSource implements ObjectSource {
     @Inject
     private TrafficProcessor trafficProcessor;
 
+    @Inject
+    private FRDetailsViewProvider detailsProvider;
+
     private String currentZone;
 
     @Override
@@ -32,5 +38,10 @@ public class FRObjectSource implements ObjectSource {
 
 
         return trafficProcessor.getPlanes(100, currentZone);
+    }
+
+    @Override
+    public ObjectDetailsViewProvider getDetailsProvider() {
+        return detailsProvider;
     }
 }

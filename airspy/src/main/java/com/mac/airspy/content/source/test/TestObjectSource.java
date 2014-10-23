@@ -1,6 +1,11 @@
 package com.mac.airspy.content.source.test;
 
+import android.content.Context;
+import android.view.View;
+import android.widget.TextView;
+import com.google.inject.Inject;
 import com.mac.airspy.ARObject;
+import com.mac.airspy.content.ObjectDetailsViewProvider;
 import com.mac.airspy.content.ObjectSource;
 import com.mac.airspy.location.SimpleLocation;
 
@@ -11,6 +16,9 @@ import java.util.List;
  * Created by Maciej on 2014-10-12.
  */
 public class TestObjectSource implements ObjectSource {
+    @Inject
+    private Context ctx;
+
     @Override
     public List<? extends ARObject> getObjects() {
         List<ARObject> list = new ArrayList<ARObject>();
@@ -29,5 +37,17 @@ public class TestObjectSource implements ObjectSource {
         }
 
         return list;
+    }
+
+    @Override
+    public ObjectDetailsViewProvider getDetailsProvider() {
+        return new ObjectDetailsViewProvider() {
+            @Override
+            public View getInfoView(ARObject object) {
+                TextView view = new TextView(ctx);
+                view.setText("Obiekt testowy: " + object.getName());
+                return view;
+            }
+        };
     }
 }

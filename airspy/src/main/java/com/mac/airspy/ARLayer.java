@@ -41,8 +41,7 @@ public class ARLayer extends BaseApplicationComponent implements SurfaceHolder.C
     private ScreenParameters screenParameters;
 
     @Inject
-    public ARLayer(Context ctx) {
-        LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    public ARLayer(LayoutInflater inflater) {
         marker = inflater.inflate(R.layout.marker, null, false);
     }
 
