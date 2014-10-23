@@ -10,14 +10,14 @@ public class SimpleLocation {
     private double latitude;
     private double altitude;
 
-    public SimpleLocation(double longtitude, double latitude, double altitudeMeters) {
+    public SimpleLocation(double longtitude, double latitude, double altitude) {
         this.longtitude = longtitude;
         this.latitude = latitude;
-        this.altitude = altitudeMeters / 1000;
+        this.altitude = altitude;
     }
 
     public SimpleLocation(Location location) {
-        this(location.getLongitude(), location.getLatitude(), location.getAltitude());
+        this(location.getLongitude(), location.getLatitude(), location.getAltitude() / 1000);
     }
 
     public double getLongtitude() {

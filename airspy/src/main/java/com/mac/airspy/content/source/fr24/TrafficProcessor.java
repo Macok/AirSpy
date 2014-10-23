@@ -79,7 +79,8 @@ public class TrafficProcessor {
         jp.nextToken(); //altitude
 
         double altitudeFeet = jp.getValueAsDouble();
-        if (altitudeFeet < 20) {
+        double altitudeMeters = MathUtils.feetToMeters(altitudeFeet);
+        if (altitudeMeters < 20) {
             //TODO return null;
         }
 
@@ -87,6 +88,10 @@ public class TrafficProcessor {
 
         double speedKt = jp.getValueAsDouble();
         double speedKmh = MathUtils.knotsToKmh(speedKt);
+
+        if (speedKmh < 30) {
+            //TODO return null;
+        }
 
         jp.nextToken(); //sqawk
         jp.nextToken(); //radar
@@ -127,9 +132,7 @@ public class TrafficProcessor {
             return null;
         }
 
-        double altitude = MathUtils.feetToMeters(altitudeFeet);
-
-        SimpleLocation planeLocation = new SimpleLocation(lon, lat, altitude);
+        SimpleLocation planeLocation = new SimpleLocation(lon, lat, altitudeMeters / 1000);
 
         SimpleLocation userLocation = locationHolder.getLocation();
         Vector3D distVector = MathUtils.calculateDistanceVector(planeLocation, userLocation);

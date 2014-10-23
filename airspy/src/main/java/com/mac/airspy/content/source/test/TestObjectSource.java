@@ -23,9 +23,9 @@ public class TestObjectSource implements ObjectSource {
     public List<? extends ARObject> getObjects() {
         List<ARObject> list = new ArrayList<ARObject>();
 
-        SimpleLocation palacKultury = new SimpleLocation(21.006111, 52.231667, 120);
-        SimpleLocation factory = new SimpleLocation(20.8946992, 52.2012648, 40);
-        SimpleLocation castorama = new SimpleLocation(20.9335608, 52.2030393, 40);
+        SimpleLocation palacKultury = new SimpleLocation(21.006111, 52.231667, 0.120);
+        SimpleLocation factory = new SimpleLocation(20.8946992, 52.2012648, 0.40);
+        SimpleLocation castorama = new SimpleLocation(20.9335608, 52.2030393, 0.40);
         list.add(new TestObject("Palac kultury", palacKultury));
         list.add(new TestObject("factory", factory));
         list.add(new TestObject("castorama", castorama));
