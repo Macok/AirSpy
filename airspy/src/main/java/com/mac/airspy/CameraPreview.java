@@ -3,8 +3,8 @@ package com.mac.airspy;
 import android.content.Context;
 import android.hardware.Camera;
 import android.util.Log;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
+import android.view.*;
+import android.widget.Toast;
 
 import java.io.IOException;
 
@@ -61,8 +61,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         // stop preview before making changes
         tryStopPreview();
 
-        // set preview size and make any resize, rotate or
-        // reformatting changes here
+        handleDeviceRotation(w, h);
 
         // start preview with new settings
         try {
@@ -72,6 +71,64 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         } catch (Exception e) {
             Log.d("", "Error starting camera preview: " + e.getMessage());
         }
+    }
+
+    private void handleDeviceRotation(int w, int h) {
+        Display display = ((WindowManager)getContext()
+                .getSystemService(Context.WINDOW_SERVICE))
+                .getDefaultDisplay();
+        Camera.Parameters parameters = mCamera.getParameters();
+
+        Camera.Size size = null;
+        int degrees = 0;
+
+        if(display.getRotation() == Surface.ROTATION_0) {
+            size = getBestPreviewSize(h, w, parameters);
+            degrees = 90;
+        }
+
+        if(display.getRotation() == Surface.ROTATION_90)
+        {
+            size = getBestPreviewSize(w, h, parameters);
+        }
+
+        if(display.getRotation() == Surface.ROTATION_180)
+        {
+            size = getBestPreviewSize(h, w, parameters);
+        }
+
+        if(display.getRotation() == Surface.ROTATION_270)
+        {
+            size = getBestPreviewSize(w, h, parameters);
+            degrees = 180;
+        }
+
+        parameters.setPreviewSize(size.width, size.height);
+
+        mCamera.setParameters(parameters);
+        mCamera.setDisplayOrientation(degrees);
+    }
+
+    private Camera.Size getBestPreviewSize(int width, int height,
+                                           Camera.Parameters parameters) {
+        Camera.Size result = null;
+
+        for (Camera.Size size : parameters.getSupportedPreviewSizes()) {
+            if (size.width <= width && size.height <= height) {
+                if (result == null) {
+                    result = size;
+                } else {
+                    int resultArea = result.width * result.height;
+                    int newArea = size.width * size.height;
+
+                    if (newArea > resultArea) {
+                        result = size;
+                    }
+                }
+            }
+        }
+
+        return result;
     }
 
     private void tryStopPreview() {

@@ -28,8 +28,8 @@ public class FlightRadarClient {
     public static final String FR_AIRCRAFT_THUMBNAIL_URL =
             "http://flightradar24static.appspot.com/static/_fr24/images/sideviews/AIRCRAFT_CODE.png";
 
-    public static final int CONNECT_TIMEOUT_MILLIS = 5000;
-    public static final int SOCKET_TIMEOUT_MILLIS = 1000;
+    public static final int CONNECT_TIMEOUT_MILLIS = 8000;
+    public static final int SOCKET_TIMEOUT_MILLIS = 5000;
     private HttpClient httpClient;
 
     public FlightRadarClient() {

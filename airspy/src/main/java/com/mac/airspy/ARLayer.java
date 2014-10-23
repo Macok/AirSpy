@@ -2,6 +2,7 @@ package com.mac.airspy;
 
 import android.content.Context;
 import android.graphics.*;
+import android.util.Log;
 import android.view.*;
 import android.widget.TextView;
 import com.google.inject.Inject;
@@ -125,6 +126,10 @@ public class ARLayer extends BaseApplicationComponent implements SurfaceHolder.C
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         if (width > 0 && height > 0) {
             screenParameters = new ScreenParameters(width, height);
+
+            Log.d("Obtained screen parameters", "SizeX: " + screenParameters.sizeX
+                    + " SizeY: " + screenParameters.sizeY);
+
             setState(ComponentState.READY);
         }
     }
