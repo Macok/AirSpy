@@ -7,8 +7,13 @@ import com.mac.airspy.location.SimpleLocation;
  * Created by Maciej on 02.02.14.
  */
 public class MathUtils {
-    public static final double FEET_TO_METERS=0.3048;
-    public static final int EARTH_RADIUS=6371;
+    public static final double FEET_TO_METERS = 0.3048;
+    public static final double KNOTS_TO_KMH = 1.852;
+    public static final int EARTH_RADIUS = 6371;
+
+    public static double knotsToKmh(double knots) {
+        return knots * KNOTS_TO_KMH;
+    }
 
     public static double feetToMeters(double feet) {
         return feet * FEET_TO_METERS;

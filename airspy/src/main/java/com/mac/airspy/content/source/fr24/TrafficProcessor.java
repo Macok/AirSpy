@@ -86,7 +86,7 @@ public class TrafficProcessor {
         jp.nextToken(); //speed kt
 
         double speedKt = jp.getValueAsDouble();
-        double speedKmh = speedKt;//todo
+        double speedKmh = MathUtils.knotsToKmh(speedKt);
 
         jp.nextToken(); //sqawk
         jp.nextToken(); //radar

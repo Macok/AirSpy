@@ -14,6 +14,7 @@ import com.mac.airspy.content.ObjectDetailsViewProvider;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import org.apache.commons.lang3.StringUtils;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -36,16 +37,36 @@ public class FRDetailsViewProvider implements ObjectDetailsViewProvider {
 
         View layout = layoutInflater.inflate(R.layout.plane_info, null, false);
 
+        bindPlaneToLayout(plane, layout);
+
+        return layout;
+    }
+
+    private void bindPlaneToLayout(final Plane plane, View layout) {
         TextView fromView = (TextView) layout.findViewById(R.id.textView);
         TextView toView = (TextView) layout.findViewById(R.id.textView2);
-        TextView altitudeView = (TextView) layout.findViewById(R.id.textView6);
+        TextView aircraftView = (TextView) layout.findViewById(R.id.textView6);
         TextView speedView = (TextView) layout.findViewById(R.id.textView5);
 
-        fromView.setText(plane.getFromCode());
-        toView.setText(plane.getToCode());
+        if (!StringUtils.isBlank(plane.getFromCode())) {
+            fromView.setText(plane.getFromCode());
+        }else {
+            ((View) fromView.getParent()).setVisibility(View.INVISIBLE);
+        }
 
-        altitudeView.setText(numberFormat.format(plane.getLocation().getAltitude()) + "km");
-        speedView.setText(numberFormat.format(plane.getSpeedKmh()) + "km/h");
+        if (!StringUtils.isBlank(plane.getToCode())) {
+            toView.setText(plane.getToCode());
+        }else {
+            ((View) toView.getParent()).setVisibility(View.INVISIBLE);
+        }
+
+        if (!StringUtils.isBlank(plane.getAircraftCode())) {
+            aircraftView.setText(plane.getAircraftCode());
+        }else {
+            ((View) aircraftView.getParent()).setVisibility(View.INVISIBLE);
+        }
+
+        speedView.setText(numberFormat.format(plane.getSpeedKmh()) + " km/h");
 
         final ImageView imageView = (ImageView) layout.findViewById(R.id.imageView);
         final View progressBar = layout.findViewById(R.id.progressBar);
@@ -61,8 +82,6 @@ public class FRDetailsViewProvider implements ObjectDetailsViewProvider {
 
             }
         });
-
-        return layout;
     }
 
     private static class LoadingViewManagingListener implements ImageLoadingListener {
