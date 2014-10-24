@@ -26,11 +26,7 @@ public class Vector3D implements Serializable {
 
     private static final long serialVersionUID = -7026354578113311982L;
 
-    private double x, y, z;
-
-    public Vector3D(double value) {
-        this(value, value, value);
-    }
+    private final double x, y, z;
 
     public Vector3D(double x, double y, double z) {
         this.x = x;
@@ -44,17 +40,6 @@ public class Vector3D implements Serializable {
         this.z = vector3D.z;
     }
 
-    public void setX(double x) {
-        this.x = x;
-    }
-
-    public void setY(double y) {
-        this.y = y;
-    }
-
-    public void setZ(double z) {
-        this.z = z;
-    }
 
     public double getX() {
         return x;
@@ -66,18 +51,6 @@ public class Vector3D implements Serializable {
 
     public double getZ() {
         return z;
-    }
-
-    public void move(Vector3D vector3D) {
-        this.x += vector3D.x;
-        this.y += vector3D.y;
-        this.z += vector3D.z;
-    }
-
-    public void move(double x, double y, double z) {
-        this.x += x;
-        this.y += y;
-        this.z += z;
     }
 
     public double[] getCoords() {

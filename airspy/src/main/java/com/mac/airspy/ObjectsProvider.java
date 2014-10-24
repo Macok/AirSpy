@@ -70,30 +70,32 @@ public class ObjectsProvider extends BaseApplicationComponent {
 
         @Override
         public void run() {
-            if (!cancelled) {
-                try {
-                    objects = objectSource.getObjects();
-                } catch (IOException e) {
-                    Log.e("", "", e);
-                    setState(ComponentState.ERROR);
-                    cancel();
-                    return;
+            try {
+                List<? extends ARObject> newObjects = objectSource.getObjects();
+                if (!cancelled) {
+                    objects = newObjects;
                 }
-
-                //todo delete
-                ((Activity)ctx).runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(ctx, "Objects updated", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-
-                setState(ComponentState.READY);
+            } catch (IOException e) {
+                Log.e("", "", e);
+                setState(ComponentState.ERROR);
+                cancel();
+                return;
             }
+
+            //todo delete
+            ((Activity)ctx).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(ctx, "Objects updated", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+
+            setState(ComponentState.READY);
+
         }
 
-        public void cancel() {
+        private void cancel() {
             cancelled = true;
         }
 

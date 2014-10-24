@@ -161,7 +161,7 @@ public class TrafficProcessor {
     private boolean locationTooFar(double longtitude, double latitude) {
         SimpleLocation userLocation = locationHolder.getLocation();
 
-        return Math.abs(longtitude - userLocation.getLongtitude()) > 2 ||
-                Math.abs(latitude - userLocation.getLatitude()) > 2;
+        return Math.abs(longtitude - userLocation.getLongtitude()) > 12 ||
+                Math.abs(latitude - userLocation.getLatitude()) > 5;
     }
 }

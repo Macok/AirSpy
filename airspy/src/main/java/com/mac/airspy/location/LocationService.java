@@ -17,7 +17,7 @@ import roboguice.inject.ContextSingleton;
 @ContextSingleton
 public class LocationService extends BaseApplicationComponent implements BackgroundLocationService.LocationListener {
 
-    private Location currentLocation;
+    private SimpleLocation currentLocation;
 
     private BackgroundLocationService bgLocationService;
 
@@ -57,16 +57,12 @@ public class LocationService extends BaseApplicationComponent implements Backgro
     }
 
     public SimpleLocation getLocation() {
-        if (state != ComponentState.READY) {
-            throw new IllegalStateException();
-        }
-
-        return new SimpleLocation(currentLocation);
+        return currentLocation;
     }
 
     @Override
     public void onLocationChanged(Location location) {
-        currentLocation = location;
+        currentLocation = new SimpleLocation(location);
 
         setState(ComponentState.READY);
     }

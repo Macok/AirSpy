@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:weightSum="2"
+              android:weightSum="10"
               android:orientation="horizontal"
               android:layout_width="match_parent"
               android:layout_height="match_parent" android:padding="6dp" android:gravity="center_vertical">
@@ -9,12 +9,12 @@
     <RelativeLayout
             android:layout_marginRight="15dp"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
         <com.makeramen.RoundedImageView
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/imageView"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:adjustViewBounds="true"
                 app:corner_radius="4dip"
@@ -29,10 +29,11 @@
                 android:id="@+id/progressBar"/>
     </RelativeLayout>
     <LinearLayout
-            android:layout_weight="1"
+            android:layout_weight="6"
             android:orientation="vertical"
             android:layout_width="0dp"
-            android:layout_height="wrap_content" android:layout_marginRight="10dp">
+            android:layout_height="wrap_content"
+            >
         <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="fill_parent"
@@ -66,7 +67,7 @@
         </LinearLayout>
     </LinearLayout>
     <LinearLayout
-            android:layout_weight="1"
+            android:layout_weight="4"
             android:orientation="vertical"
             android:layout_width="0dp"
             android:layout_height="wrap_content">

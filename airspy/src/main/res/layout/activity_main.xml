@@ -9,7 +9,7 @@
         android:gravity="bottom"
         sothree:overlay="true"
         sothree:panelHeight="70dp"
-        sothree:shadowHeight="4dp">
+        sothree:shadowHeight="6dp">
 
     <RelativeLayout
         android:layout_width="match_parent"

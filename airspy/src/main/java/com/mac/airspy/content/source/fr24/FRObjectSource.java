@@ -37,7 +37,7 @@ public class FRObjectSource implements ObjectSource {
         Log.d("ZONE", currentZone);
 
 
-        return trafficProcessor.getPlanes(100, currentZone);
+        return trafficProcessor.getPlanes(900, currentZone);
     }
 
     @Override
