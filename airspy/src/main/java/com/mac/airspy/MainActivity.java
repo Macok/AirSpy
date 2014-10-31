@@ -7,6 +7,7 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+import android.view.Window;
 import com.google.inject.Inject;
 import com.mac.airspy.location.BackgroundLocationService;
 import com.mac.airspy.location.LocationService;

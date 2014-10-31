@@ -57,7 +57,7 @@ public class ARLayer extends BaseApplicationComponent implements SurfaceHolder.C
 
     public void draw(List<ObjectOnScreen> objects) {
         Canvas canvas = holder.lockCanvas();
-        //todo nullpointer
+        //todo nullpointer: synchronized, try/finally
 
         canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
         drawObjects(canvas, objects);
