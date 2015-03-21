@@ -11,8 +11,6 @@ import android.view.Window;
 import com.google.inject.Inject;
 import com.mac.airspy.location.BackgroundLocationService;
 import com.mac.airspy.location.LocationService;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
@@ -37,9 +35,6 @@ public class MainActivity extends RoboActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this).build();
-        ImageLoader.getInstance().init(config);
 
         detailsDisplay.init();
 

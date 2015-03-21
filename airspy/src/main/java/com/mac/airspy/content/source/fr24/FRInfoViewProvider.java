@@ -11,9 +11,8 @@ import com.google.inject.Inject;
 import com.mac.airspy.ARObject;
 import com.mac.airspy.R;
 import com.mac.airspy.content.ObjectViewProvider;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 import org.apache.commons.lang3.StringUtils;
 
 import java.text.DecimalFormat;
@@ -73,42 +72,25 @@ public class FRInfoViewProvider implements ObjectViewProvider {
         ((Activity) ctx).runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                ImageLoader.getInstance().displayImage(
-                        FlightRadarClient.FR_AIRCRAFT_THUMBNAIL_URL
-                                .replace("AIRCRAFT_CODE", plane.getAircraftCode()),
-                        imageView,
-                        new LoadingViewManagingListener(progressBar)
-                );
+                progressBar.setVisibility(View.VISIBLE);
 
+                String imageUrl = FlightRadarClient.FR_AIRCRAFT_THUMBNAIL_URL
+                        .replace("AIRCRAFT_CODE", plane.getAircraftCode());
+
+                Picasso.with(ctx)
+                        .load(imageUrl)
+                        .into(imageView, new Callback() {
+                            @Override
+                            public void onSuccess() {
+                                progressBar.setVisibility(View.GONE);
+                            }
+
+                            @Override
+                            public void onError() {
+                                progressBar.setVisibility(View.GONE);
+                            }
+                        });
             }
         });
     }
-
-    private static class LoadingViewManagingListener implements ImageLoadingListener {
-        private final View loadingView;
-
-        private LoadingViewManagingListener(View loadingView) {
-            this.loadingView = loadingView;
-        }
-
-        @Override
-        public void onLoadingStarted(String imageUri, View view) {
-            loadingView.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-            loadingView.setVisibility(View.GONE);
-        }
-
-        @Override
-        public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-            loadingView.setVisibility(View.GONE);
-        }
-
-        @Override
-        public void onLoadingCancelled(String imageUri, View view) {
-
-        }
-    };
 }
