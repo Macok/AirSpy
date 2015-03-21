@@ -1,7 +1,9 @@
 package com.mac.airspy;
 
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 import com.google.inject.Inject;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import roboguice.inject.ContextSingleton;
@@ -191,6 +193,11 @@ public class ObjectDetailsDisplay implements SlidingUpPanelLayout.PanelSlideList
         @Override
         public View call() throws Exception {
             return objectsProvider.getDetailsViewProvider().getView(currentObject);
+        }
+
+        @Override
+        protected void onException(Exception e) throws RuntimeException {
+            Log.e("", "", e);
         }
 
         @Override

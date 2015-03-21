@@ -1,9 +1,6 @@
 package com.mac.airspy.content.source.fr24;
 
 import android.util.Log;
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mac.airspy.location.LocationService;
@@ -22,6 +19,7 @@ import java.util.List;
  */
 public class TrafficProcessor {
     private static final String TAG = TrafficProcessor.class.getSimpleName();
+    private static final int MAX_RANGE_KM = 250;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -31,7 +29,7 @@ public class TrafficProcessor {
     @Inject
     private LocationService locationHolder;
 
-    public List<Plane> getPlanes(int range, Double[] bounds) throws IOException {
+    public List<Plane> getPlanes(Double[] bounds) throws IOException {
         InputStream trafficStream = frClient.getTrafficStream(bounds);
 
         try {
@@ -39,13 +37,13 @@ public class TrafficProcessor {
 
             List<Plane> objects = new LinkedList<>();
             for (JsonNode aircraftNode : trafficNode) {
-                Plane plane = processPlane(aircraftNode, range);
+                Plane plane = processPlane(aircraftNode);
                 if (plane != null) {
                     objects.add(plane);
                 }
             }
 
-            Log.d(TAG, "Zone: " + bounds + ", range: " + range + ", found: " + objects.size() + " planes");
+            Log.d(TAG, "Zone: " + bounds + ", found: " + objects.size() + " planes");
 
             return objects;
         } finally {
@@ -53,7 +51,7 @@ public class TrafficProcessor {
         }
     }
 
-    private Plane processPlane(JsonNode node, int range) throws IOException{
+    private Plane processPlane(JsonNode node) throws IOException{
 
         String id = node.get(0).asText();
         String hex = node.get(1).asText();
@@ -90,7 +88,7 @@ public class TrafficProcessor {
         Vector3D distVector = MathUtils.calculateDistanceVector(planeLocation, userLocation);
 
         double distance = distVector.length();
-        if (distance > range)
+        if (distance > MAX_RANGE_KM)
             return null;
 
         Plane plane = new Plane(id);

@@ -47,8 +47,8 @@ public class FlightRadarClient {
         return openStream(url);
     }
 
-    public InputStream getPlaneDataStream(String hex) throws IOException {
-        String url = FR_PLANEDATA_URL + hex;
+    public InputStream getPlaneDataStream(String id) throws IOException {
+        String url = FR_PLANEDATA_URL + id;
         Log.d(TAG, url);
         return openStream(url);
     }

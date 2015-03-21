@@ -30,7 +30,7 @@ public class FRObjectSource implements ObjectSource {
 
         Double[] bounds = zoneBoundsResolver.getBounds();
 
-        return trafficProcessor.getPlanes(900, bounds);
+        return trafficProcessor.getPlanes(bounds);
     }
 
     @Override

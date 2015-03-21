@@ -12,8 +12,8 @@ import java.text.DecimalFormatSymbols;
  */
 public class ZoneBoundsResolver {
 
-    public static final int LONGTITUDE_MARGIN = 3;
-    public static final int LATITUDE_MARGIN = 3;
+    public static final int LONGTITUDE_MARGIN = 4;
+    public static final int LATITUDE_MARGIN = 4;
     @Inject
     private LocationService locationService;
 
