@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.google.inject.Inject;
 import com.mac.airspy.ARObject;
 import com.mac.airspy.R;
-import com.mac.airspy.content.ObjectInfoViewProvider;
+import com.mac.airspy.content.ObjectViewProvider;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
@@ -22,7 +22,7 @@ import java.text.NumberFormat;
 /**
  * Created by Maciej on 2014-10-23.
  */
-public class FRInfoViewProvider implements ObjectInfoViewProvider {
+public class FRInfoViewProvider implements ObjectViewProvider {
     @Inject
     private LayoutInflater layoutInflater;
 
@@ -32,7 +32,7 @@ public class FRInfoViewProvider implements ObjectInfoViewProvider {
     private static final NumberFormat numberFormat = new DecimalFormat("#0");
 
     @Override
-    public View getInfoView(ARObject object) {
+    public View getView(ARObject object) {
         final Plane plane = (Plane) object;
 
         View layout = layoutInflater.inflate(R.layout.plane_info, null, false);

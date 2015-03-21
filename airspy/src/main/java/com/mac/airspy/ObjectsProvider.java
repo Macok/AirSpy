@@ -3,7 +3,7 @@ package com.mac.airspy;
 import android.app.Activity;
 import android.util.Log;
 import android.widget.Toast;
-import com.mac.airspy.content.ObjectInfoViewProvider;
+import com.mac.airspy.content.ObjectViewProvider;
 import com.mac.airspy.content.ObjectSource;
 import com.mac.airspy.content.source.fr24.FRObjectSource;
 import roboguice.RoboGuice;
@@ -60,10 +60,10 @@ public class ObjectsProvider extends BaseApplicationComponent {
 
     private class UpdateObjectsCommand implements Runnable {
 
-
         private final ObjectSource objectSource;
-        private boolean cancelled;
 
+
+        private boolean cancelled;
         private UpdateObjectsCommand(ObjectSource objectSource) {
             this.objectSource = objectSource;
         }
@@ -101,7 +101,11 @@ public class ObjectsProvider extends BaseApplicationComponent {
 
     }
 
-    public ObjectInfoViewProvider getInfoViewProvider() {
+    public ObjectViewProvider getInfoViewProvider() {
         return objectSource.getInfoViewProvider();
+    }
+
+    public ObjectViewProvider getDetailsViewProvider() {
+        return objectSource.getDetailsViewProvider();
     }
 }

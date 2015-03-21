@@ -38,6 +38,7 @@ public class ObjectDetailsDisplay implements SlidingUpPanelLayout.PanelSlideList
     private ARObject currentObject;
 
     private LoadObjectInfoTask currentObjectInfoTask;
+    private LoadObjectDetailsTask currentObjectDetailsTask;
 
     private long lastObjectChangeTime = 0;
 
@@ -103,12 +104,20 @@ public class ObjectDetailsDisplay implements SlidingUpPanelLayout.PanelSlideList
             currentObjectInfoTask = null;
         }
 
-        //todo stop loadDetails task
+        if (currentObjectDetailsTask != null) {
+            currentObjectDetailsTask.cancel(false);
+            currentObjectDetailsTask = null;
+        }
     }
 
     @Override
     public void onPanelSlide(View view, float v) {
-        //todo load objectDetailsContainer
+        if (currentObject != null) {
+            if (currentObjectDetailsTask == null) {
+                currentObjectDetailsTask = new LoadObjectDetailsTask();
+                currentObjectDetailsTask.execute();
+            }
+        }
     }
 
     @Override
@@ -131,30 +140,6 @@ public class ObjectDetailsDisplay implements SlidingUpPanelLayout.PanelSlideList
 
     }
 
-    private class LoadObjectInfoTask extends SafeAsyncTask<View> {
-        @Override
-        protected void onPreExecute() throws Exception {
-            objectInfoContainer.setVisibility(View.GONE);
-            objectDetailsContainer.setVisibility(View.GONE);
-            objectInfoProgressBar.setVisibility(View.VISIBLE);
-            objectDetailsProgressBar.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        public View call() throws Exception {
-            return objectsProvider.getInfoViewProvider().getInfoView(currentObject);
-        }
-
-        @Override
-        protected void onSuccess(View view) throws Exception {
-            objectInfoContainer.removeAllViews();
-            objectInfoContainer.addView(view);
-
-            objectInfoProgressBar.setVisibility(View.GONE);
-            objectInfoContainer.setVisibility(View.VISIBLE);
-        }
-    }
-
     private void setSlidingPanelVisible(final boolean visible) {
         slidingLayout.post(new Runnable() {
             @Override
@@ -170,5 +155,51 @@ public class ObjectDetailsDisplay implements SlidingUpPanelLayout.PanelSlideList
 
     private void showPanel() {
         slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+    }
+
+    private class LoadObjectInfoTask extends SafeAsyncTask<View> {
+        @Override
+        protected void onPreExecute() throws Exception {
+            objectInfoContainer.setVisibility(View.GONE);
+            objectDetailsContainer.setVisibility(View.GONE);
+            objectInfoProgressBar.setVisibility(View.VISIBLE);
+            objectDetailsProgressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        public View call() throws Exception {
+            return objectsProvider.getInfoViewProvider().getView(currentObject);
+        }
+
+        @Override
+        protected void onSuccess(View view) throws Exception {
+            objectInfoContainer.removeAllViews();
+            objectInfoContainer.addView(view);
+
+            objectInfoProgressBar.setVisibility(View.GONE);
+            objectInfoContainer.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private class LoadObjectDetailsTask extends SafeAsyncTask<View>{
+        @Override
+        protected void onPreExecute() throws Exception {
+            objectDetailsContainer.setVisibility(View.GONE);
+            objectDetailsProgressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        public View call() throws Exception {
+            return objectsProvider.getDetailsViewProvider().getView(currentObject);
+        }
+
+        @Override
+        protected void onSuccess(View view) throws Exception {
+            objectDetailsContainer.removeAllViews();
+            objectDetailsContainer.addView(view);
+
+            objectDetailsContainer.setVisibility(View.VISIBLE);
+            objectDetailsProgressBar.setVisibility(View.GONE);
+        }
     }
 }
