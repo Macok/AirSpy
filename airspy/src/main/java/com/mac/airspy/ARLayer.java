@@ -11,6 +11,7 @@ import roboguice.inject.ContextSingleton;
 import roboguice.inject.InjectView;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.List;
 
@@ -21,7 +22,7 @@ import java.util.List;
 @ContextSingleton
 public class ARLayer extends BaseApplicationComponent implements SurfaceHolder.Callback {
 
-    private static final NumberFormat numberFormat = new DecimalFormat("#0.00");
+    private final NumberFormat numberFormat;
 
     @InjectView(R.id.arLayerView)
     private SurfaceView arLayerView;
@@ -44,6 +45,10 @@ public class ARLayer extends BaseApplicationComponent implements SurfaceHolder.C
     @Inject
     public ARLayer(LayoutInflater inflater) {
         marker = inflater.inflate(R.layout.marker, null, false);
+
+        DecimalFormatSymbols formatSymbols = new DecimalFormatSymbols();
+        formatSymbols.setDecimalSeparator('.');
+        numberFormat = new DecimalFormat("#0.00", formatSymbols);
     }
 
     public void setFps(final int fps) {
