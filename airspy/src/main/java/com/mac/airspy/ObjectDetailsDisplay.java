@@ -142,7 +142,7 @@ public class ObjectDetailsDisplay implements SlidingUpPanelLayout.PanelSlideList
 
         @Override
         public View call() throws Exception {
-            return objectsProvider.getDetailsProvider().getInfoView(currentObject);
+            return objectsProvider.getInfoViewProvider().getInfoView(currentObject);
         }
 
         @Override

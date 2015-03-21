@@ -5,7 +5,7 @@ import android.view.View;
 import android.widget.TextView;
 import com.google.inject.Inject;
 import com.mac.airspy.ARObject;
-import com.mac.airspy.content.ObjectDetailsViewProvider;
+import com.mac.airspy.content.ObjectInfoViewProvider;
 import com.mac.airspy.content.ObjectSource;
 import com.mac.airspy.location.SimpleLocation;
 
@@ -40,8 +40,8 @@ public class TestObjectSource implements ObjectSource {
     }
 
     @Override
-    public ObjectDetailsViewProvider getDetailsProvider() {
-        return new ObjectDetailsViewProvider() {
+    public ObjectInfoViewProvider getInfoViewProvider() {
+        return new ObjectInfoViewProvider() {
             @Override
             public View getInfoView(ARObject object) {
                 TextView view = new TextView(ctx);

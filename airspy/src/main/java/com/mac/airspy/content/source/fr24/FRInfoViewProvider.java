@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.google.inject.Inject;
 import com.mac.airspy.ARObject;
 import com.mac.airspy.R;
-import com.mac.airspy.content.ObjectDetailsViewProvider;
+import com.mac.airspy.content.ObjectInfoViewProvider;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
@@ -22,7 +22,7 @@ import java.text.NumberFormat;
 /**
  * Created by Maciej on 2014-10-23.
  */
-public class FRDetailsViewProvider implements ObjectDetailsViewProvider {
+public class FRInfoViewProvider implements ObjectInfoViewProvider {
     @Inject
     private LayoutInflater layoutInflater;
 

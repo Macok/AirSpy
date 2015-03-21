@@ -11,5 +11,5 @@ import java.util.List;
 public interface ObjectSource {
     public List<? extends ARObject> getObjects() throws IOException;
 
-    public ObjectDetailsViewProvider getDetailsProvider();
+    public ObjectInfoViewProvider getInfoViewProvider();
 }

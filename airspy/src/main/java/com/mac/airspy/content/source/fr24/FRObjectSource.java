@@ -1,11 +1,8 @@
 package com.mac.airspy.content.source.fr24;
 
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
 import com.google.inject.Inject;
 import com.mac.airspy.ARObject;
-import com.mac.airspy.content.ObjectDetailsViewProvider;
+import com.mac.airspy.content.ObjectInfoViewProvider;
 import com.mac.airspy.content.ObjectSource;
 
 import java.io.IOException;
@@ -23,7 +20,7 @@ public class FRObjectSource implements ObjectSource {
     private TrafficProcessor trafficProcessor;
 
     @Inject
-    private FRDetailsViewProvider detailsProvider;
+    private FRInfoViewProvider infoViewProvider;
 
     @Override
     public List<? extends ARObject> getObjects() throws IOException {
@@ -34,7 +31,7 @@ public class FRObjectSource implements ObjectSource {
     }
 
     @Override
-    public ObjectDetailsViewProvider getDetailsProvider() {
-        return detailsProvider;
+    public ObjectInfoViewProvider getInfoViewProvider() {
+        return infoViewProvider;
     }
 }

@@ -6,6 +6,6 @@ import com.mac.airspy.ARObject;
 /**
  * Created by Maciej on 2014-10-23.
  */
-public interface ObjectDetailsViewProvider {
+public interface ObjectInfoViewProvider {
     public View getInfoView(ARObject object);
 }

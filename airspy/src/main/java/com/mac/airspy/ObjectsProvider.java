@@ -3,7 +3,7 @@ package com.mac.airspy;
 import android.app.Activity;
 import android.util.Log;
 import android.widget.Toast;
-import com.mac.airspy.content.ObjectDetailsViewProvider;
+import com.mac.airspy.content.ObjectInfoViewProvider;
 import com.mac.airspy.content.ObjectSource;
 import com.mac.airspy.content.source.fr24.FRObjectSource;
 import roboguice.RoboGuice;
@@ -101,7 +101,7 @@ public class ObjectsProvider extends BaseApplicationComponent {
 
     }
 
-    public ObjectDetailsViewProvider getDetailsProvider() {
-        return objectSource.getDetailsProvider();
+    public ObjectInfoViewProvider getInfoViewProvider() {
+        return objectSource.getInfoViewProvider();
     }
 }
