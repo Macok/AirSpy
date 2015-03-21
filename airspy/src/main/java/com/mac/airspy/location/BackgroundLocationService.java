@@ -90,6 +90,8 @@ public class BackgroundLocationService extends RoboService implements
         errorMessage = null;
 
         locationClient.requestLocationUpdates(locationRequest, this);
+
+        sendLastLocationIfPresent();
     }
 
     @Override

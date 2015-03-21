@@ -55,6 +55,7 @@ public class TrafficProcessor {
 
     private Plane processPlane(JsonNode node, int range) throws IOException{
 
+        String id = node.get(0).asText();
         String hex = node.get(1).asText();
 
         double lat = node.get(2).asDouble();
@@ -92,7 +93,7 @@ public class TrafficProcessor {
         if (distance > range)
             return null;
 
-        Plane plane = new Plane();
+        Plane plane = new Plane(id);
         plane.setHex(hex);
         plane.setFlightNumber(flightNumber);
         plane.setCallsign(callsign);

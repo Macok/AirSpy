@@ -22,13 +22,15 @@ public class Plane implements MovingARObject{
     private double speedKmh;
     private double track;
     private long dataTimestamp;
+    private final String id;
 
-    public Plane() {
+    public Plane(String id) {
+        this.id = id;
     }
 
     @Override
     public String getId() {
-        return hex;
+        return id;
     }
 
     @Override
