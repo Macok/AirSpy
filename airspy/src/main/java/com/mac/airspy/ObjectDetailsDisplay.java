@@ -169,6 +169,6 @@ public class ObjectDetailsDisplay implements SlidingUpPanelLayout.PanelSlideList
     }
 
     private void showPanel() {
-        slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+        slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
     }
 }
