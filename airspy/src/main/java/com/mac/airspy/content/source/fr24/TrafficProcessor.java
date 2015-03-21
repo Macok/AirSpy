@@ -4,6 +4,8 @@ import android.util.Log;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mac.airspy.location.LocationService;
 import com.mac.airspy.location.SimpleLocation;
 import com.mac.airspy.utils.MathUtils;
@@ -21,116 +23,65 @@ import java.util.List;
 public class TrafficProcessor {
     private static final String TAG = TrafficProcessor.class.getSimpleName();
 
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
     @Inject
     private FlightRadarClient frClient;
 
     @Inject
     private LocationService locationHolder;
 
-    public List<Plane> getPlanes(int range, String zone) throws IOException {
-        InputStream trafficStream = frClient.getTrafficStream(zone);
+    public List<Plane> getPlanes(int range, Double[] bounds) throws IOException {
+        InputStream trafficStream = frClient.getTrafficStream(bounds);
 
-        JsonFactory factory = new JsonFactory();
-        JsonParser jp = factory.createParser(trafficStream);
+        try {
+            JsonNode trafficNode = objectMapper.readTree(trafficStream).get("aircraft");
 
-        if (jp.nextToken() != JsonToken.START_OBJECT) {
-            throw new IOException("JsonToken.START_OBJECT excepted");
-        }
-
-        List<Plane> objects = new LinkedList<>();
-        
-        while (jp.nextToken() == JsonToken.FIELD_NAME) {
-            String fieldname = jp.getText();
-
-            if (fieldname.equals("full_count") || fieldname.equals("version")) {
-                jp.nextToken();
-                continue;
+            List<Plane> objects = new LinkedList<>();
+            for (JsonNode aircraftNode : trafficNode) {
+                Plane plane = processPlane(aircraftNode, range);
+                if (plane != null) {
+                    objects.add(plane);
+                }
             }
 
-            Plane plane = processPlane(jp, range);
-            if(plane !=null) {
-                objects.add(plane);
-            }
+            Log.d(TAG, "Zone: " + bounds + ", range: " + range + ", found: " + objects.size() + " planes");
+
+            return objects;
+        } finally {
+            trafficStream.close();
         }
-
-        Log.d(TAG, "Zone: " + zone + ", range: " + range + ", found: " + objects.size() + " planes");
-
-        return objects;
     }
 
-    private Plane processPlane(JsonParser jp, int range) throws IOException{
-        jp.nextToken(); //start array
+    private Plane processPlane(JsonNode node, int range) throws IOException{
 
-        jp.nextToken(); //hex
+        String hex = node.get(1).asText();
 
-        String hex = jp.getValueAsString();
+        double lat = node.get(2).asDouble();
+        double lon = node.get(3).asDouble();
 
-        jp.nextToken(); //latitude
-
-        double lat = jp.getValueAsDouble();
-
-        jp.nextToken(); //longtitude
-
-        double lon = jp.getValueAsDouble();
-
-        jp.nextToken(); //track
-        double track = jp.getValueAsDouble();
-
-        jp.nextToken(); //altitude
-
-        double altitudeFeet = jp.getValueAsDouble();
+        double altitudeFeet = node.get(5).asDouble();
         double altitudeMeters = MathUtils.feetToMeters(altitudeFeet);
         if (altitudeMeters < 20) {
             //TODO return null;
         }
 
-        jp.nextToken(); //speed kt
-
-        double speedKt = jp.getValueAsDouble();
+        double speedKt = node.get(6).asDouble();
         double speedKmh = MathUtils.knotsToKmh(speedKt);
 
         if (speedKmh < 30) {
             //TODO return null;
         }
 
-        jp.nextToken(); //sqawk
-        jp.nextToken(); //radar
-        jp.nextToken(); //aircraft
+        double track = node.get(4).asDouble();
+        String aircraft = node.get(9).asText();
+        String registration = node.get(10).asText();
+        long timestampSeconds = node.get(11).asLong();
+        String from = node.get(12).asText();
+        String to = node.get(13).asText();
+        String flightNumber = node.get(14).asText();
+        String callsign = node.get(17).asText();
 
-        String aircraft = jp.getValueAsString();
-
-        jp.nextToken(); //registration
-
-        String registration = jp.getValueAsString();
-
-        jp.nextToken(); //timestamp seconds
-
-        long timestampSeconds = jp.getValueAsLong();
-
-        jp.nextToken(); //from
-
-        String from = jp.getValueAsString();
-
-        jp.nextToken(); //to
-
-        String to = jp.getValueAsString();
-
-        jp.nextToken(); //flight number
-
-        String flightNumber = jp.getValueAsString();
-
-        jp.nextToken();
-        jp.nextToken(); //vertical speed
-        jp.nextToken(); //callsign
-
-        String callsign = jp.getValueAsString();
-
-        jp.nextToken();
-        jp.nextToken(); //end array
-
-        if (locationTooFar(lon, lat)) {
-            return null;
-        }
 
         SimpleLocation planeLocation = new SimpleLocation(lon, lat, altitudeMeters / 1000);
 
@@ -156,12 +107,5 @@ public class TrafficProcessor {
         plane.setDataTimestamp(timestampSeconds * 1000);
 
         return plane;
-    }
-
-    private boolean locationTooFar(double longtitude, double latitude) {
-        SimpleLocation userLocation = locationHolder.getLocation();
-
-        return Math.abs(longtitude - userLocation.getLongtitude()) > 12 ||
-                Math.abs(latitude - userLocation.getLatitude()) > 5;
     }
 }

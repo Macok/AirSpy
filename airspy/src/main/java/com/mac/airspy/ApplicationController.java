@@ -129,15 +129,6 @@ public class ApplicationController extends BaseApplicationComponent
         }
     }
 
-    private boolean componentStarted(ApplicationComponent component) {
-        if (ComponentState.READY == component.getState() ||
-                ComponentState.STARTING == component.getState()) {
-            return true;
-        }
-
-        return false;
-    }
-
     private boolean firstPhaseReady() {
         for (ApplicationComponent component : firstPhaseComponents) {
             if (ComponentState.READY != component.getState()) {

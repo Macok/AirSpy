@@ -54,7 +54,7 @@ public class ObjectDetailsDisplay implements SlidingUpPanelLayout.PanelSlideList
     }
 
     private void hidePanel() {
-        slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+        slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
     }
 
     public void showObjectInfo(ARObject object) {
