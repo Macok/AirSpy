@@ -7,9 +7,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="bottom"
-        sothree:overlay="true"
-        sothree:panelHeight="70dp"
-        sothree:shadowHeight="6dp">
+        sothree:umanoOverlay="true"
+        sothree:umanoPanelHeight="70dp"
+        sothree:umanoShadowHeight="6dp">
 
     <RelativeLayout
         android:layout_width="match_parent"

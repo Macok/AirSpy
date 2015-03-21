@@ -48,9 +48,13 @@ public class ObjectDetailsDisplay implements SlidingUpPanelLayout.PanelSlideList
         slidingLayout.postDelayed(new Runnable() {
             @Override
             public void run() {
-                slidingLayout.hidePanel();
+                hidePanel();
             }
         }, 1000);
+    }
+
+    private void hidePanel() {
+        slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
     }
 
     public void showObjectInfo(ARObject object) {
@@ -156,11 +160,15 @@ public class ObjectDetailsDisplay implements SlidingUpPanelLayout.PanelSlideList
             @Override
             public void run() {
                 if (visible) {
-                    slidingLayout.showPanel();
+                    showPanel();
                 } else {
-                    slidingLayout.hidePanel();
+                    hidePanel();
                 }
             }
         });
+    }
+
+    private void showPanel() {
+        slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
     }
 }
