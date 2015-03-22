@@ -31,9 +31,6 @@ public class RadarComponent implements SurfaceHolder.Callback {
     private OrientationService orientationService;
 
     @Inject
-    private LocationService locationService;
-
-    @Inject
     private UserPreferencesHelper preferencesHelper;
 
     @Inject
@@ -58,12 +55,12 @@ public class RadarComponent implements SurfaceHolder.Callback {
         planePaint.setColor(Color.RED);
 
         radarBgPaint = new Paint();
-        radarBgPaint.setAlpha(150);
+        radarBgPaint.setAlpha(180);
     }
 
     public void init() {
         surfaceView.getHolder().addCallback(this);
-        surfaceView.setZOrderOnTop(true);
+        //surfaceView.setZOrderOnTop(true);
 
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inScaled = false;

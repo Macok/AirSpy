@@ -18,6 +18,12 @@
         android:layout_height="match_parent">
 
         <SurfaceView
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:id="@+id/radarView"
+            android:layout_margin="10dp"/>
+
+        <SurfaceView
                 android:id="@+id/arLayerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
@@ -84,12 +90,6 @@
                 android:text="km"
                 android:id="@+id/textView14"/>
         </LinearLayout>
-
-        <SurfaceView
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:id="@+id/radarView"
-            android:layout_margin="10dp"/>
 
     </RelativeLayout>
 
