@@ -3,6 +3,7 @@ package com.mac.airspy;
 import android.app.Activity;
 import android.util.Log;
 import android.widget.Toast;
+import com.google.inject.Inject;
 import com.mac.airspy.content.ObjectViewProvider;
 import com.mac.airspy.content.ObjectSource;
 import com.mac.airspy.content.source.fr24.FRObjectSource;
@@ -10,6 +11,7 @@ import roboguice.RoboGuice;
 import roboguice.inject.ContextSingleton;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 
@@ -20,7 +22,14 @@ import java.util.concurrent.*;
 @ContextSingleton
 public class ObjectsProvider extends BaseApplicationComponent {
 
+    public static final int RANGE_MAX_KM = 200;
+    public static final int RANGE_MIN_KM = 5;
+    public static final int RANGE_DEFAULT_KM = 60;
+
     public static final int OBJECTS_UPDATE_INTERVAL_SECONDS = 30;
+
+    @Inject
+    private UserPreferencesHelper preferencesHelper;
 
     private ScheduledExecutorService executor;
 
@@ -55,7 +64,14 @@ public class ObjectsProvider extends BaseApplicationComponent {
     }
 
     public List<? extends ARObject> getObjects() {
-        return objects;
+        List<ARObject> objectsInRange = new ArrayList<>();
+        for (ARObject object : objects) {
+            if (object.getDistanceKm() <= preferencesHelper.getRange()) {
+                objectsInRange.add(object);
+            }
+        }
+
+        return objectsInRange;
     }
 
     private class UpdateObjectsCommand implements Runnable {

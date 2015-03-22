@@ -61,23 +61,32 @@
                 android:textColor="#ffffff"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="10km"
+                android:text="Range:"
                 android:id="@+id/textView15"/>
 
             <SeekBar
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/seekBar"
-                android:max="200"
+                android:max="100"
                 android:longClickable="false"
                 android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"/>
+                android:layout_marginRight="5dp"
+                android:progress="40"/>
+
+            <TextView
+                android:textColor="#ffffff"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:text="123"
+                android:id="@+id/textView16"
+                android:gravity="right"/>
 
             <TextView
                 android:textColor="#ffffff"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="200km"
+                android:text="km"
                 android:id="@+id/textView14"/>
         </LinearLayout>
 

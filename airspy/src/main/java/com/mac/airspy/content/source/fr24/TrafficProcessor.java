@@ -3,6 +3,7 @@ package com.mac.airspy.content.source.fr24;
 import android.util.Log;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mac.airspy.ObjectsProvider;
 import com.mac.airspy.location.LocationService;
 import com.mac.airspy.location.SimpleLocation;
 import com.mac.airspy.utils.MathUtils;
@@ -19,7 +20,6 @@ import java.util.List;
  */
 public class TrafficProcessor {
     private static final String TAG = TrafficProcessor.class.getSimpleName();
-    private static final int MAX_RANGE_KM = 250;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -88,7 +88,7 @@ public class TrafficProcessor {
         Vector3D distVector = MathUtils.calculateDistanceVector(planeLocation, userLocation);
 
         double distance = distVector.length();
-        if (distance > MAX_RANGE_KM)
+        if (distance > ObjectsProvider.RANGE_MAX_KM)
             return null;
 
         Plane plane = new Plane(id);

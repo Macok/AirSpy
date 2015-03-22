@@ -27,6 +27,9 @@ public class MainActivity extends RoboActivity {
     @Inject
     private ObjectDetailsDisplay detailsDisplay;
 
+    @Inject
+    private RangeComponent rangeComponent;
+
     /**
      * Called when the activity is starting. Restores the activity state.
      */
@@ -35,6 +38,8 @@ public class MainActivity extends RoboActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+
+        rangeComponent.init();
 
         detailsDisplay.init();
 
