@@ -20,7 +20,7 @@ import java.util.concurrent.*;
 @ContextSingleton
 public class ObjectsProvider extends BaseApplicationComponent {
 
-    public static final int OBJECTS_UPDATE_INTERVAL_SECONDS = 6000;
+    public static final int OBJECTS_UPDATE_INTERVAL_SECONDS = 30;
 
     private ScheduledExecutorService executor;
 
