@@ -109,7 +109,7 @@ public class FRDetailsViewProvider implements ObjectViewProvider {
 
                             @Override
                             public void onError() {
-
+                                progressBar.setVisibility(View.GONE);
                             }
                         });
             }
