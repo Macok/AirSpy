@@ -58,8 +58,11 @@ public class RadarComponent implements SurfaceHolder.Callback {
         surfaceView.getHolder().addCallback(this);
         surfaceView.setZOrderOnTop(true);
 
-        radarBackground = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.radar_bg);
-        radarForeground = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.radar_fg);
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inScaled = false;
+        options.inPreferredConfig = Bitmap.Config.RGB_565;
+        radarBackground = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.radar_bg, options);
+        radarForeground = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.radar_fg, options);
 
         radarVisible = preferencesHelper.isRadarVisible();
 
@@ -78,23 +81,27 @@ public class RadarComponent implements SurfaceHolder.Callback {
             holder.setFormat(PixelFormat.TRANSPARENT);
 
             Canvas canvas = holder.lockCanvas();
-            canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+            try {
+                canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
 
-            if (radarVisible) {
-                float bearing = orientationService.getOrientation()[0];
+                if (radarVisible) {
+                    float bearing = orientationService.getOrientation()[0];
 
-                canvas.save();
+                    canvas.save();
 
-                canvas.rotate((float) -Math.toDegrees(bearing), width / 2, height / 2);
-                canvas.drawBitmap(radarBackgroundScaled, 0, 0, radarBgPaint);
-                canvas.drawCircle(width / 2, height / 5, 20, planePaint);
+                    canvas.rotate((float) -Math.toDegrees(bearing), width / 2, height / 2);
+                    canvas.drawBitmap(radarBackgroundScaled, 0, 0, radarBgPaint);
+                    canvas.drawCircle(width / 2, height / 5, 20, planePaint);
 
-                canvas.restore();
+                    canvas.restore();
 
-                canvas.drawBitmap(radarForegroundScaled, 0, 0, null);
+                    canvas.drawBitmap(radarForegroundScaled, 0, 0, null);
+                }
+            } finally {
+                if (canvas != null) {
+                    holder.unlockCanvasAndPost(canvas);
+                }
             }
-
-            holder.unlockCanvasAndPost(canvas);
         }
     }
 
