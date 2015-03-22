@@ -19,4 +19,14 @@ public class UserPreferencesHelper {
     public int getRange() {
         return sharedPrefs.getInt("range", ObjectsProvider.RANGE_DEFAULT_KM);
     }
+
+    public boolean isRadarVisible() {
+        return sharedPrefs.getBoolean("radarVisible", true);
+    }
+
+    public void setRadarVisible(boolean radarVisible) {
+        sharedPrefs.edit()
+                .putBoolean("radarVisible", radarVisible)
+                .apply();
+    }
 }

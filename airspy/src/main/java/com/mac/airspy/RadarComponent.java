@@ -1,10 +1,14 @@
 package com.mac.airspy;
 
+import android.content.Context;
 import android.graphics.*;
+import android.graphics.drawable.Drawable;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 import com.google.inject.Inject;
 import roboguice.inject.ContextSingleton;
+import roboguice.inject.InjectResource;
 import roboguice.inject.InjectView;
 
 /**
@@ -22,13 +26,50 @@ public class RadarComponent implements SurfaceHolder.Callback {
     @Inject
     private OrientationService orientationService;
 
+    @Inject
+    private UserPreferencesHelper preferencesHelper;
+
+    @Inject
+    private Context ctx;
+
+    private Bitmap radarBackground;
+    private Bitmap radarForeground;
+
+    private Bitmap radarBackgroundScaled;
+    private Bitmap radarForegroundScaled;
+
+    private Paint planePaint;
+    private Paint radarBgPaint;
+
     private boolean ready;
+    private boolean radarVisible;
     private int width;
     private int height;
+
+    public RadarComponent() {
+        planePaint = new Paint();
+        planePaint.setColor(Color.RED);
+
+        radarBgPaint = new Paint();
+        radarBgPaint.setAlpha(150);
+    }
 
     public void init() {
         surfaceView.getHolder().addCallback(this);
         surfaceView.setZOrderOnTop(true);
+
+        radarBackground = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.radar_bg);
+        radarForeground = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.radar_fg);
+
+        radarVisible = preferencesHelper.isRadarVisible();
+
+        surfaceView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                radarVisible = !preferencesHelper.isRadarVisible();
+                preferencesHelper.setRadarVisible(radarVisible);
+            }
+        });
     }
 
     public void draw() {
@@ -38,13 +79,20 @@ public class RadarComponent implements SurfaceHolder.Callback {
 
             Canvas canvas = holder.lockCanvas();
             canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-            Paint paint = new Paint();
-            paint.setColor(Color.RED);
 
+            if (radarVisible) {
+                float bearing = orientationService.getOrientation()[0];
 
-            float bearing = orientationService.getOrientation()[0];
-            canvas.rotate((float) -Math.toDegrees(bearing), width / 2, height / 2);
-            canvas.drawCircle(width / 2, height / 5, 20, paint);
+                canvas.save();
+
+                canvas.rotate((float) -Math.toDegrees(bearing), width / 2, height / 2);
+                canvas.drawBitmap(radarBackgroundScaled, 0, 0, radarBgPaint);
+                canvas.drawCircle(width / 2, height / 5, 20, planePaint);
+
+                canvas.restore();
+
+                canvas.drawBitmap(radarForegroundScaled, 0, 0, null);
+            }
 
             holder.unlockCanvasAndPost(canvas);
         }
@@ -59,8 +107,16 @@ public class RadarComponent implements SurfaceHolder.Callback {
         if (width > 0 && height > 0) {
             this.width = width;
             this.height = height;
+
+            scaleBitmaps();
+
             ready = true;
         }
+    }
+
+    private void scaleBitmaps() {
+        radarBackgroundScaled = Bitmap.createScaledBitmap(radarBackground, width, height, true);
+        radarForegroundScaled = Bitmap.createScaledBitmap(radarForeground, width, height, true);
     }
 
     @Override

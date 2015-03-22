@@ -86,9 +86,10 @@
         </LinearLayout>
 
         <SurfaceView
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:id="@+id/radarView"/>
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:id="@+id/radarView"
+            android:layout_margin="10dp"/>
 
     </RelativeLayout>
 
