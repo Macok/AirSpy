@@ -3,7 +3,6 @@ package com.mac.airspy;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 import com.google.inject.Inject;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import roboguice.inject.ContextSingleton;
@@ -64,7 +63,7 @@ public class ObjectDetailsDisplay implements SlidingUpPanelLayout.PanelSlideList
         stopCurrentTasks();
 
         currentObject = object;
-        setSlidingPanelVisible(true);
+        showPanel();
 
         currentObjectInfoTask = new LoadObjectInfoTask();
         currentObjectInfoTask.execute();
@@ -93,7 +92,7 @@ public class ObjectDetailsDisplay implements SlidingUpPanelLayout.PanelSlideList
         stopCurrentTasks();
 
         currentObject = null;
-        setSlidingPanelVisible(false);
+        hidePanel();
     }
 
     private void stopCurrentTasks() {
@@ -110,8 +109,8 @@ public class ObjectDetailsDisplay implements SlidingUpPanelLayout.PanelSlideList
 
     @Override
     public void onPanelSlide(View view, float v) {
-        if (currentObject != null) {
-            if (currentObjectDetailsTask == null) {
+        if (SlidingUpPanelLayout.PanelState.DRAGGING == slidingLayout.getPanelState() && v > 0) {
+            if (currentObject != null && currentObjectDetailsTask == null) {
                 currentObjectDetailsTask = new LoadObjectDetailsTask();
                 currentObjectDetailsTask.execute();
             }
@@ -138,27 +137,24 @@ public class ObjectDetailsDisplay implements SlidingUpPanelLayout.PanelSlideList
 
     }
 
-    private void setSlidingPanelVisible(final boolean visible) {
+    private void showPanel() {
         slidingLayout.post(new Runnable() {
             @Override
             public void run() {
-                if (visible) {
-                    showPanel();
-                } else {
-                    hidePanel();
-                }
+                slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                slidingLayout.setTouchEnabled(true);
             }
         });
     }
 
-    private void showPanel() {
-        slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-        slidingLayout.setTouchEnabled(true);
-    }
-
     private void hidePanel() {
-        slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
-        slidingLayout.setTouchEnabled(false);
+        slidingLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+                slidingLayout.setTouchEnabled(false);
+            }
+        });
     }
 
     private class LoadObjectInfoTask extends SafeAsyncTask<View> {
@@ -172,7 +168,17 @@ public class ObjectDetailsDisplay implements SlidingUpPanelLayout.PanelSlideList
 
         @Override
         public View call() throws Exception {
-            return objectsProvider.getInfoViewProvider().getView(currentObject);
+            if (objectsProvider.getState() == ComponentState.READY) {
+                return objectsProvider.getInfoViewProvider().getView(currentObject);
+            }
+
+            throw new Exception("ObjectsProvider not started");
+        }
+
+        @Override
+        protected void onException(Exception e) throws RuntimeException {
+            super.onException(e);
+            hide();
         }
 
         @Override
@@ -194,12 +200,17 @@ public class ObjectDetailsDisplay implements SlidingUpPanelLayout.PanelSlideList
 
         @Override
         public View call() throws Exception {
-            return objectsProvider.getDetailsViewProvider().getView(currentObject);
+            if (objectsProvider.getState() == ComponentState.READY) {
+                return objectsProvider.getDetailsViewProvider().getView(currentObject);
+            }
+
+            throw new Exception("ObjectsProvider not started");
         }
 
         @Override
         protected void onException(Exception e) throws RuntimeException {
-            Log.e("", "", e);
+            super.onException(e);
+            hide();
         }
 
         @Override
