@@ -2,7 +2,6 @@ package com.mac.airspy;
 
 import android.app.Activity;
 import android.content.Context;
-import android.os.Looper;
 import com.google.inject.Inject;
 
 /**
@@ -18,17 +17,16 @@ public abstract class BaseApplicationComponent implements ApplicationComponent {
 
     protected void setState(ComponentState state) {
         if (this.state != state) {
-            doSetState(state);
+            BaseApplicationComponent.this.state = state;
+            notifyListener();
         }
     }
 
-    protected void doSetState(final ComponentState state) {
+    protected void notifyListener() {
         Activity activity = (Activity) ctx;
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                BaseApplicationComponent.this.state = state;
-
                 if (stateListener != null) {
                     stateListener.onStateChanged(BaseApplicationComponent.this, state);
                 }

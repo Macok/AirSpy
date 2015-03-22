@@ -14,11 +14,11 @@ repositories {
 
 android {
     compileSdkVersion 21
-    buildToolsVersion "21.1.0"
+    buildToolsVersion "21.1.1"
 
     defaultConfig {
         applicationId "com.mac.airspy"
-        minSdkVersion 11
+        minSdkVersion 13
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"

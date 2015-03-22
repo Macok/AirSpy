@@ -170,7 +170,8 @@ public class ApplicationController extends BaseApplicationComponent
     @Override
     protected void setState(ComponentState state) {
         //notify listener even if new state is the same as old
-        super.doSetState(state);
+        this.state = state;
+        super.notifyListener();
     }
 
     @Override
