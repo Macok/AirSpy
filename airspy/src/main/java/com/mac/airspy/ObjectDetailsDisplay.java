@@ -46,13 +46,7 @@ public class ObjectDetailsDisplay implements SlidingUpPanelLayout.PanelSlideList
     public void init() {
         slidingLayout.setPanelSlideListener(this);
 
-        //AndroidSlidingUpPanel bug walkaroung
-        slidingLayout.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                hidePanel();
-            }
-        }, 1000);
+        hidePanel();
     }
 
     public void showObjectInfo(ARObject object) {
