@@ -47,7 +47,7 @@ public class ARLayer extends BaseApplicationComponent implements SurfaceHolder.C
 
         DecimalFormatSymbols formatSymbols = new DecimalFormatSymbols();
         formatSymbols.setDecimalSeparator('.');
-        numberFormat = new DecimalFormat("#0.00", formatSymbols);
+        numberFormat = new DecimalFormat("#0.0", formatSymbols);
     }
 
     public void setFps(final int fps) {
