@@ -56,10 +56,6 @@ public class ObjectDetailsDisplay implements SlidingUpPanelLayout.PanelSlideList
         }, 1000);
     }
 
-    private void hidePanel() {
-        slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
-    }
-
     public void showObjectInfo(ARObject object) {
         if (!intervalElapsed()) {
             return; //ignore double clicks
@@ -157,6 +153,12 @@ public class ObjectDetailsDisplay implements SlidingUpPanelLayout.PanelSlideList
 
     private void showPanel() {
         slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+        slidingLayout.setTouchEnabled(true);
+    }
+
+    private void hidePanel() {
+        slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+        slidingLayout.setTouchEnabled(false);
     }
 
     private class LoadObjectInfoTask extends SafeAsyncTask<View> {
