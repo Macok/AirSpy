@@ -2,13 +2,15 @@ package com.mac.airspy;
 
 import android.content.Context;
 import android.graphics.*;
-import android.graphics.drawable.Drawable;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.widget.Toast;
 import com.google.inject.Inject;
+import com.mac.airspy.location.LocationService;
+import com.mac.airspy.utils.MathUtils;
+import com.mac.airspy.utils.Vector3D;
 import roboguice.inject.ContextSingleton;
-import roboguice.inject.InjectResource;
 import roboguice.inject.InjectView;
 
 /**
@@ -17,6 +19,9 @@ import roboguice.inject.InjectView;
 
 @ContextSingleton
 public class RadarComponent implements SurfaceHolder.Callback {
+    private static final float RADAR_SCALE_RATIO = 0.85f;
+    public static final int OBJECT_CIRCLE_RADIUS_PX = 8;
+
     @InjectView(R.id.radarView)
     private SurfaceView surfaceView;
 
@@ -25,6 +30,9 @@ public class RadarComponent implements SurfaceHolder.Callback {
 
     @Inject
     private OrientationService orientationService;
+
+    @Inject
+    private LocationService locationService;
 
     @Inject
     private UserPreferencesHelper preferencesHelper;
@@ -71,6 +79,10 @@ public class RadarComponent implements SurfaceHolder.Callback {
             public void onClick(View v) {
                 radarVisible = !preferencesHelper.isRadarVisible();
                 preferencesHelper.setRadarVisible(radarVisible);
+
+                if (!radarVisible) {
+                    Toast.makeText(ctx, "Radar hidden, touch again to show", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -91,7 +103,8 @@ public class RadarComponent implements SurfaceHolder.Callback {
 
                     canvas.rotate((float) -Math.toDegrees(bearing), width / 2, height / 2);
                     canvas.drawBitmap(radarBackgroundScaled, 0, 0, radarBgPaint);
-                    canvas.drawCircle(width / 2, height / 5, 20, planePaint);
+
+                    drawObjects(canvas);
 
                     canvas.restore();
 
@@ -103,6 +116,21 @@ public class RadarComponent implements SurfaceHolder.Callback {
                 }
             }
         }
+    }
+
+    private void drawObjects(Canvas canvas) {
+        for (ARObject object : objectsProvider.getObjects()) {
+            Vector3D distVector = MathUtils.calculateApproximatedDistanceVector(
+                    locationService.getLocation(), object);
+
+            float dx = (float) ((distVector.getX() / preferencesHelper.getRange()) * width / 2)
+                    * RADAR_SCALE_RATIO;
+            float dy = -(float) ((distVector.getY() / preferencesHelper.getRange()) * height / 2)
+                    * RADAR_SCALE_RATIO;
+
+            canvas.drawCircle(width / 2 + dx, height / 2 + dy, OBJECT_CIRCLE_RADIUS_PX, planePaint);
+        }
+
     }
 
     @Override
