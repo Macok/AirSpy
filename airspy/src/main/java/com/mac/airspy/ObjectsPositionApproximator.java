@@ -16,7 +16,7 @@ public class ObjectsPositionApproximator {
     @Inject
     private LocationService locationService;
 
-    public void approximate() {
+    public void updateApproximatedPositions() {
         for (ARObject object : objectsProvider.getAllObjects()) {
             SimpleLocation userLocation = locationService.getLocation();
             Vector3D distanceVector = MathUtils.calculateApproximatedDistanceVector(userLocation, object);
