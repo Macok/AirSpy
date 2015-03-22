@@ -3,6 +3,7 @@
 <com.sothree.slidinguppanel.SlidingUpPanelLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:sothree="http://schemas.android.com/apk/res-auto"
+        android:keepScreenOn="true"
         android:id="@+id/sliding_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -29,8 +30,8 @@
 
 
         <LinearLayout
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
+                android:layout_below="@+id/rangeLayout"
+                android:layout_alignParentRight="true"
                 android:orientation="horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -49,6 +50,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/rangeLayout"
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
             android:orientation="horizontal"
@@ -56,13 +58,6 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:layout_margin="6dp">
-
-            <TextView
-                android:textColor="#ffffff"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Range:"
-                android:id="@+id/textView15"/>
 
             <SeekBar
                 android:layout_width="150dp"
@@ -89,6 +84,11 @@
                 android:text="km"
                 android:id="@+id/textView14"/>
         </LinearLayout>
+
+        <SurfaceView
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:id="@+id/radarView"/>
 
     </RelativeLayout>
 

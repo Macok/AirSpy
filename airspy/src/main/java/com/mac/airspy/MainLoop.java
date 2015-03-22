@@ -20,6 +20,9 @@ public class MainLoop implements Runnable {
     @Inject
     private FPSCalculator fpsCalculator;
 
+    @Inject
+    private RadarComponent radarComponent;
+
     @Override
     public void run() {
         while (running) {
@@ -29,6 +32,7 @@ public class MainLoop implements Runnable {
 
                 visibleObjectsObtainer.update();
                 arLayer.draw(visibleObjectsObtainer.getObjectsOnScreen());
+                radarComponent.draw();
             }
 
         }
