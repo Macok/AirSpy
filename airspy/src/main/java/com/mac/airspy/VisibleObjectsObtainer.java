@@ -23,7 +23,7 @@ public class VisibleObjectsObtainer {
 
     public void update() {
         List<ObjectOnScreen> objectsOnScreen = new LinkedList<ObjectOnScreen>();
-        List<? extends ARObject> allObjects = objectsProvider.getObjects();
+        List<? extends ARObject> allObjects = objectsProvider.getObjectsInRange();
 
         for (ARObject object : allObjects) {
             PointF screenPos = screenPositionCalculator.calculateScreenPosition(object);

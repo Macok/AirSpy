@@ -6,7 +6,6 @@ import com.mac.airspy.location.LocationService;
 import com.mac.airspy.location.SimpleLocation;
 import com.mac.airspy.parameters.CameraParameters;
 import com.mac.airspy.parameters.ScreenParameters;
-import com.mac.airspy.utils.MathUtils;
 import com.mac.airspy.utils.Vector3D;
 
 /**
@@ -49,7 +48,7 @@ public class ScreenPositionCalculator {
 
         float[] orientationValues = orientationService.getOrientation();
 
-        Vector3D distanceVector = MathUtils.calculateApproximatedDistanceVector(observerLocation, target);
+        Vector3D distanceVector = target.getApproximatedDistanceVector();
 
         double distX = distanceVector.getX();
         double distY = distanceVector.getY();

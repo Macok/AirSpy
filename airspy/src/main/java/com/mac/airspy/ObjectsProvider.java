@@ -63,15 +63,19 @@ public class ObjectsProvider extends BaseApplicationComponent {
         }
     }
 
-    public List<? extends ARObject> getObjects() {
+    public List<? extends ARObject> getObjectsInRange() {
         List<ARObject> objectsInRange = new ArrayList<>();
         for (ARObject object : objects) {
-            if (object.getDistanceKm() <= preferencesHelper.getRange()) {
+            if (object.getApproximatedDistanceVector().length() <= preferencesHelper.getRange()) {
                 objectsInRange.add(object);
             }
         }
 
         return objectsInRange;
+    }
+
+    public List<? extends ARObject> getAllObjects() {
+        return objects;
     }
 
     private class UpdateObjectsCommand implements Runnable {

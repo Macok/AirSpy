@@ -23,12 +23,17 @@ public class MainLoop implements Runnable {
     @Inject
     private RadarComponent radarComponent;
 
+    @Inject
+    private ObjectsPositionApproximator positionApproximator;
+
     @Override
     public void run() {
         while (running) {
 
             if (ComponentState.READY == objectsProvider.getState()) {
                 arLayer.setFps(fpsCalculator.getFpsAndUpdate());
+
+                positionApproximator.approximate();
 
                 visibleObjectsObtainer.update();
                 arLayer.draw(visibleObjectsObtainer.getObjectsOnScreen());

@@ -1,6 +1,5 @@
 package com.mac.airspy;
 
-import android.content.Context;
 import android.graphics.*;
 import android.util.Log;
 import android.view.*;
@@ -94,7 +93,7 @@ public class ARLayer extends BaseApplicationComponent implements SurfaceHolder.C
 
         nameView.setText(object.getName());
 
-        String distanceStr = numberFormat.format(object.getDistanceKm());
+        String distanceStr = numberFormat.format(object.getApproximatedDistanceVector().length());
         distanceView.setText(distanceStr + " km");
 
         int spec = View.MeasureSpec.makeMeasureSpec(ViewGroup.LayoutParams.WRAP_CONTENT, View.MeasureSpec.UNSPECIFIED);

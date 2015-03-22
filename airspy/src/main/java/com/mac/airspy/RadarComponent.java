@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.Toast;
 import com.google.inject.Inject;
 import com.mac.airspy.location.LocationService;
-import com.mac.airspy.utils.MathUtils;
 import com.mac.airspy.utils.Vector3D;
 import roboguice.inject.ContextSingleton;
 import roboguice.inject.InjectView;
@@ -119,9 +118,8 @@ public class RadarComponent implements SurfaceHolder.Callback {
     }
 
     private void drawObjects(Canvas canvas) {
-        for (ARObject object : objectsProvider.getObjects()) {
-            Vector3D distVector = MathUtils.calculateApproximatedDistanceVector(
-                    locationService.getLocation(), object);
+        for (ARObject object : objectsProvider.getObjectsInRange()) {
+            Vector3D distVector = object.getApproximatedDistanceVector();
 
             float dx = (float) ((distVector.getX() / preferencesHelper.getRange()) * width / 2)
                     * RADAR_SCALE_RATIO;

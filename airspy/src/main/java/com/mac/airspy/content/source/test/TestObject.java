@@ -2,6 +2,7 @@ package com.mac.airspy.content.source.test;
 
 import com.mac.airspy.ARObject;
 import com.mac.airspy.location.SimpleLocation;
+import com.mac.airspy.utils.Vector3D;
 
 /**
  * Created by Maciej on 04.02.14.
@@ -23,16 +24,21 @@ public class TestObject implements ARObject {
     }
 
     @Override
-    public double getDistanceKm() {
-        return 0;
-    }
-
-    @Override
     public SimpleLocation getLocation() {
         return location;
     }
 
     public String getName() {
         return name;
+    }
+
+    @Override
+    public Vector3D getApproximatedDistanceVector() {
+        return null;
+    }
+
+    @Override
+    public void setApproximatedDistanceVector(Vector3D approximatedDistanceVector) {
+
     }
 }

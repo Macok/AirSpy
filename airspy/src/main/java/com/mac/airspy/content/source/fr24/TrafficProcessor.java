@@ -27,7 +27,7 @@ public class TrafficProcessor {
     private FlightRadarClient frClient;
 
     @Inject
-    private LocationService locationHolder;
+    private LocationService locationService;
 
     public List<Plane> getPlanes(Double[] bounds) throws IOException {
         InputStream trafficStream = frClient.getTrafficStream(bounds);
@@ -84,19 +84,11 @@ public class TrafficProcessor {
 
         SimpleLocation planeLocation = new SimpleLocation(lon, lat, altitudeMeters / 1000);
 
-        SimpleLocation userLocation = locationHolder.getLocation();
-        Vector3D distVector = MathUtils.calculateDistanceVector(planeLocation, userLocation);
-
-        double distance = distVector.length();
-        if (distance > ObjectsProvider.RANGE_MAX_KM)
-            return null;
-
         Plane plane = new Plane(id);
         plane.setHex(hex);
         plane.setFlightNumber(flightNumber);
         plane.setCallsign(callsign);
         plane.setLocation(planeLocation);
-        plane.setDistanceKm(distance);
         plane.setAircraftCode(aircraft);
         plane.setRegistration(registration);
         plane.setFromCode(from);
@@ -104,6 +96,14 @@ public class TrafficProcessor {
         plane.setSpeedKmh(speedKmh);
         plane.setTrack(track);
         plane.setDataTimestamp(timestampSeconds * 1000);
+
+        SimpleLocation userLocation = locationService.getLocation();
+
+        Vector3D distVector = MathUtils.calculateApproximatedDistanceVector(userLocation, plane);
+        plane.setApproximatedDistanceVector(distVector);
+
+        if (distVector.length() > ObjectsProvider.RANGE_MAX_KM + 10)
+            return null;
 
         return plane;
     }
