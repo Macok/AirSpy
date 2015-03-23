@@ -89,25 +89,25 @@ public class RadarComponent implements SurfaceHolder.Callback {
             holder.setFormat(PixelFormat.TRANSPARENT);
 
             Canvas canvas = holder.lockCanvas();
-            try {
-                canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+            if (canvas != null) {
+                try {
+                    canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
 
-                if (radarVisible) {
-                    float bearing = orientationService.getOrientation()[0];
+                    if (radarVisible) {
+                        float bearing = orientationService.getOrientation()[0];
 
-                    canvas.save();
+                        canvas.save();
 
-                    canvas.rotate((float) -Math.toDegrees(bearing), width / 2, height / 2);
-                    canvas.drawBitmap(radarBackgroundScaled, 0, 0, radarBgPaint);
+                        canvas.rotate((float) -Math.toDegrees(bearing), width / 2, height / 2);
+                        canvas.drawBitmap(radarBackgroundScaled, 0, 0, radarBgPaint);
 
-                    drawObjects(canvas);
+                        drawObjects(canvas);
 
-                    canvas.restore();
+                        canvas.restore();
 
-                    canvas.drawBitmap(radarForegroundScaled, 0, 0, null);
-                }
-            } finally {
-                if (canvas != null) {
+                        canvas.drawBitmap(radarForegroundScaled, 0, 0, null);
+                    }
+                } finally {
                     holder.unlockCanvasAndPost(canvas);
                 }
             }
