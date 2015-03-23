@@ -1,11 +1,13 @@
 package com.mac.airspy;
 
+import android.app.Activity;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.hardware.Camera;
 import android.util.Log;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import com.google.inject.Inject;
 import com.mac.airspy.parameters.CameraParameters;
 import roboguice.inject.ContextSingleton;
@@ -15,41 +17,42 @@ import roboguice.inject.InjectView;
  * Created by Maciej on 2014-10-04.
  */
 @ContextSingleton
-public class CameraController extends BaseApplicationComponent {
+public class CameraController extends BaseApplicationComponent implements CameraPreview.SurfaceChangedListener {
 
     @InjectView(R.id.cameraPreview)
-    private FrameLayout cameraPreviewContainer;
+    private RelativeLayout cameraPreviewContainer;
 
     @Inject
     private Resources resources;
-
-    private Camera camera;
 
     private CameraParameters cameraParameters;
     private CameraPreview cameraPreview;
 
     public void resume() {
-        camera = getCameraInstance();
-        if (camera == null) {
-            setState(ComponentState.ERROR);
-            return;
-        }
-
-        obtainCameraParameters();
-
-        cameraPreview = new CameraPreview(ctx, camera);
+        cameraPreview = new CameraPreview((Activity) ctx, 0, CameraPreview.LayoutMode.FitToParent, this);
 
         cameraPreviewContainer.removeAllViews();
         cameraPreviewContainer.addView(cameraPreview);
-
-        setState(ComponentState.READY);
     }
 
-    private void obtainCameraParameters() {
-        Camera.Parameters params = camera.getParameters();
+    public void pause() {
+        setState(ComponentState.STOPPED);
 
-        double cameraHorizontalAngle = Math.toRadians(params.getHorizontalViewAngle());
-        double cameraVerticalAngle = Math.toRadians(params.getVerticalViewAngle());
+        cameraPreview.stop();
+        cameraPreviewContainer.removeAllViews(); // This is necessary.
+        cameraPreview = null;
+    }
+
+
+    public CameraParameters getCameraParameters() {
+        return cameraParameters;
+    }
+
+    @Override
+    public void onSurfaceChanged(Camera.Parameters parameters) {
+
+        double cameraHorizontalAngle = Math.toRadians(parameters.getHorizontalViewAngle());
+        double cameraVerticalAngle = Math.toRadians(parameters.getVerticalViewAngle());
 
         if (Configuration.ORIENTATION_LANDSCAPE == resources.getConfiguration().orientation) {
             this.cameraParameters = new CameraParameters(cameraHorizontalAngle, cameraVerticalAngle);
@@ -57,32 +60,6 @@ public class CameraController extends BaseApplicationComponent {
             this.cameraParameters = new CameraParameters(cameraVerticalAngle, cameraHorizontalAngle);
         }
 
-        Log.d("Obtained camera parameters",
-                "Horizontal angle: " + cameraParameters.horizontalViewAngle +
-                " Vertical angle: " + cameraParameters.verticalViewAngle);
-    }
-
-    public void pause() {
-        if (camera != null) {
-            cameraPreview.stop();
-            camera.release();
-            camera = null;
-        }
-
-        setState(ComponentState.STOPPED);
-    }
-
-    private Camera getCameraInstance(){
-        Camera c = null;
-        try {
-            c = Camera.open();
-        }
-        catch (Exception e) {
-        }
-        return c;
-    }
-
-    public CameraParameters getCameraParameters() {
-        return cameraParameters;
+        setState(ComponentState.READY);
     }
 }
