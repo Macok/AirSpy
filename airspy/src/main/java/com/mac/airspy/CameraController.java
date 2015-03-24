@@ -30,6 +30,11 @@ public class CameraController extends BaseApplicationComponent implements Camera
 
     public void resume() {
         cameraPreview = new CameraPreview((Activity) ctx, 0, CameraPreview.LayoutMode.FitToParent, this);
+        cameraPreview.setLayoutParams(
+                new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                        RelativeLayout.LayoutParams.MATCH_PARENT)
+        );
+
 
         cameraPreviewContainer.removeAllViews();
         cameraPreviewContainer.addView(cameraPreview);
