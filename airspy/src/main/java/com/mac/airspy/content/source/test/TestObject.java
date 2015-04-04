@@ -1,45 +1,25 @@
 package com.mac.airspy.content.source.test;
 
 import com.mac.airspy.ARObject;
+import com.mac.airspy.BaseARObject;
 import com.mac.airspy.location.SimpleLocation;
 import com.mac.airspy.utils.Vector3D;
 
 /**
  * Created by Maciej on 04.02.14.
  */
-public class TestObject implements ARObject {
+public class TestObject extends BaseARObject {
 
-    private String name;
+    public TestObject(String id, SimpleLocation location) {
+        super(id);
 
-    private SimpleLocation location;
-    private Vector3D approximatedDistanceVector;
-
-    public TestObject(String name, SimpleLocation location) {
-        this.name=name;
         this.location = location;
     }
 
     @Override
-    public String getId() {
-        return name;
-    }
-
-    @Override
-    public SimpleLocation getLocation() {
-        return location;
-    }
-
     public String getName() {
-        return name;
+        return id;
     }
 
-    @Override
-    public Vector3D getApproximatedDistanceVector() {
-        return approximatedDistanceVector;
-    }
 
-    @Override
-    public void setApproximatedDistanceVector(Vector3D approximatedDistanceVector) {
-        this.approximatedDistanceVector = approximatedDistanceVector;
-    }
 }

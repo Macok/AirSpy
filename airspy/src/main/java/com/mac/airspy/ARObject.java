@@ -7,7 +7,7 @@ import com.mac.airspy.utils.Vector3D;
  * Created by Maciej on 02.02.14.
  */
 public interface ARObject {
-    public String getId();
+    public Object getId();
 
     public String getName();
 
