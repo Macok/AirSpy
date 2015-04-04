@@ -12,6 +12,7 @@ public class TestObject implements ARObject {
     private String name;
 
     private SimpleLocation location;
+    private Vector3D approximatedDistanceVector;
 
     public TestObject(String name, SimpleLocation location) {
         this.name=name;
@@ -34,11 +35,11 @@ public class TestObject implements ARObject {
 
     @Override
     public Vector3D getApproximatedDistanceVector() {
-        return null;
+        return approximatedDistanceVector;
     }
 
     @Override
     public void setApproximatedDistanceVector(Vector3D approximatedDistanceVector) {
-
+        this.approximatedDistanceVector = approximatedDistanceVector;
     }
 }

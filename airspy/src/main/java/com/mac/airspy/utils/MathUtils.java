@@ -33,7 +33,7 @@ public class MathUtils {
         return distanceVector;
     }
 
-    public static Vector3D calculateDistanceVector(SimpleLocation l1, SimpleLocation l2) {
+    private static Vector3D calculateDistanceVector(SimpleLocation l1, SimpleLocation l2) {
         double l1Lat = l1.getLatitude();
         double l1Long = l1.getLongtitude();
 
