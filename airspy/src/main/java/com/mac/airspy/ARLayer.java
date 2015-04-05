@@ -35,6 +35,9 @@ public class ARLayer extends BaseApplicationComponent implements SurfaceHolder.C
     @Inject
     private ObjectDetailsDisplay objectDetailsDisplay;
 
+    @Inject
+    private RadarComponent radarComponent;
+
     private View marker;
 
     private SurfaceHolder holder;
@@ -65,6 +68,7 @@ public class ARLayer extends BaseApplicationComponent implements SurfaceHolder.C
 
         canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
         drawObjects(canvas, objects);
+        radarComponent.draw(canvas);
 
         holder.unlockCanvasAndPost(canvas);
     }
@@ -113,9 +117,10 @@ public class ARLayer extends BaseApplicationComponent implements SurfaceHolder.C
         holder = arLayerView.getHolder();
         holder.addCallback(this);
 
-        //arLayerView.setZOrderOnTop(true); TODO kolejnosc w RelativeLayout
         arLayerView.setOnTouchListener(touchListener);
         holder.setFormat(PixelFormat.TRANSPARENT);
+
+        radarComponent.init();
     }
 
     public void release() {
@@ -132,7 +137,7 @@ public class ARLayer extends BaseApplicationComponent implements SurfaceHolder.C
         if (width > 0 && height > 0) {
             screenParameters = new ScreenParameters(width, height);
 
-            Log.d("Obtained screen parameters", "SizeX: " + screenParameters.sizeX
+            Log.d("Obtained screen params", "SizeX: " + screenParameters.sizeX
                     + " SizeY: " + screenParameters.sizeY);
 
             setState(ComponentState.READY);

@@ -30,9 +30,6 @@ public class MainActivity extends RoboActivity {
     @Inject
     private RangeComponent rangeComponent;
 
-    @Inject
-    private RadarComponent radarComponent;
-
     /**
      * Called when the activity is starting. Restores the activity state.
      */
@@ -43,8 +40,6 @@ public class MainActivity extends RoboActivity {
         setContentView(R.layout.activity_main);
 
         rangeComponent.init();
-
-        radarComponent.init();
 
         detailsDisplay.init();
 

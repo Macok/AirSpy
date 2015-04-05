@@ -21,9 +21,6 @@ public class MainLoop implements Runnable {
     private FPSCalculator fpsCalculator;
 
     @Inject
-    private RadarComponent radarComponent;
-
-    @Inject
     private ObjectsPositionApproximator positionApproximator;
 
     @Override
@@ -37,7 +34,6 @@ public class MainLoop implements Runnable {
 
                 visibleObjectsObtainer.update();
                 arLayer.draw(visibleObjectsObtainer.getObjectsOnScreen());
-                radarComponent.draw();
             }
 
         }
