@@ -114,6 +114,8 @@ public class ARLayer extends BaseApplicationComponent implements SurfaceHolder.C
     }
 
     public void init() {
+        arLayerView.setZOrderMediaOverlay(true);
+
         holder = arLayerView.getHolder();
         holder.addCallback(this);
 
