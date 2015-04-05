@@ -46,7 +46,14 @@ public class FRDetailsViewProvider implements ObjectViewProvider {
         Plane plane = (Plane) object;
         InputStream is = frClient.getPlaneDataStream(plane.getId());
 
-        final PlaneDetailsDto planeDetails = objectMapper.readValue(is, PlaneDetailsDto.class);
+        final PlaneDetailsDto planeDetails;
+        try {
+            planeDetails = objectMapper.readValue(is, PlaneDetailsDto.class);
+        } finally {
+            is.close();
+        }
+
+        is.close();
 
         View layout = layoutInflater.inflate(R.layout.plane_details, null, false);
 

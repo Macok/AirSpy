@@ -21,8 +21,6 @@ import java.util.List;
 @ContextSingleton
 public class ARLayer extends BaseApplicationComponent implements SurfaceHolder.Callback {
 
-    private final NumberFormat numberFormat;
-
     @InjectView(R.id.arLayerView)
     private SurfaceView arLayerView;
 
@@ -30,28 +28,17 @@ public class ARLayer extends BaseApplicationComponent implements SurfaceHolder.C
     private TextView fpsView;
 
     @Inject
+    private ObjectMarkersDrawer objectMarkersDrawer;
+
+    @Inject
     private ARLayerTouchListener touchListener;
 
     @Inject
-    private ObjectDetailsDisplay objectDetailsDisplay;
-
-    @Inject
-    private RadarComponent radarComponent;
-
-    private View marker;
+    private RadarDrawer radarDrawer;
 
     private SurfaceHolder holder;
 
     private ScreenParameters screenParameters;
-
-    @Inject
-    public ARLayer(LayoutInflater inflater) {
-        marker = inflater.inflate(R.layout.marker, null, false);
-
-        DecimalFormatSymbols formatSymbols = new DecimalFormatSymbols();
-        formatSymbols.setDecimalSeparator('.');
-        numberFormat = new DecimalFormat("#0.0", formatSymbols);
-    }
 
     public void setFps(final int fps) {
         fpsView.post(new Runnable() {
@@ -63,54 +50,23 @@ public class ARLayer extends BaseApplicationComponent implements SurfaceHolder.C
     }
 
     public void draw(List<ObjectOnScreen> objects) {
-        Canvas canvas = holder.lockCanvas();
-        //todo nullpointer: synchronized, try/finally
+        Canvas canvas = null;
 
+        try {
+            canvas = holder.lockCanvas();
+
+            doDraw(objects, canvas);
+        } finally {
+            if (canvas != null) {
+                holder.unlockCanvasAndPost(canvas);
+            }
+        }
+    }
+
+    private void doDraw(List<ObjectOnScreen> objects, Canvas canvas) {
         canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-        drawObjects(canvas, objects);
-        radarComponent.draw(canvas);
-
-        holder.unlockCanvasAndPost(canvas);
-    }
-
-    private void drawObjects(Canvas canvas, List<ObjectOnScreen> objects) {
-        for (ObjectOnScreen object : objects) {
-            canvas.save();
-            canvas.translate(object.position.x, object.position.y);
-
-            View marker = getMarkerForObject(object.object);
-            canvas.translate(-marker.getWidth() / 2f, -marker.getHeight());
-            marker.draw(canvas);
-            canvas.restore();
-        }
-    }
-
-    private View getMarkerForObject(ARObject object) {
-        TextView nameView = (TextView) marker.findViewById(R.id.textView);
-        TextView distanceView = (TextView) marker.findViewById(R.id.textView2);
-
-        if (hasFocus(object)) {
-            marker.setBackgroundResource(R.drawable.bg_active);
-        }else{
-            marker.setBackgroundResource(R.drawable.bg);
-        }
-
-        nameView.setText(object.getName());
-
-        String distanceStr = numberFormat.format(object.getApproximatedDistanceVector().length());
-        distanceView.setText(distanceStr + " km");
-
-        int spec = View.MeasureSpec.makeMeasureSpec(ViewGroup.LayoutParams.WRAP_CONTENT, View.MeasureSpec.UNSPECIFIED);
-        marker.measure(spec, spec);
-        marker.layout(0, 0, marker.getMeasuredWidth(), marker.getMeasuredHeight());
-
-        return marker;
-    }
-
-    private boolean hasFocus(ARObject object) {
-        ARObject objectWithFocus = objectDetailsDisplay.getCurrentObject();
-        return objectWithFocus != null &&
-                objectWithFocus.getId().equals(object.getId());
+        objectMarkersDrawer.drawMarkers(canvas, objects);
+        radarDrawer.draw(canvas);
     }
 
     public void init() {
@@ -122,7 +78,7 @@ public class ARLayer extends BaseApplicationComponent implements SurfaceHolder.C
         arLayerView.setOnTouchListener(touchListener);
         holder.setFormat(PixelFormat.TRANSPARENT);
 
-        radarComponent.init();
+        radarDrawer.init();
     }
 
     public void release() {

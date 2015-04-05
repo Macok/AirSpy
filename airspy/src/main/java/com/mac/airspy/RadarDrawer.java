@@ -18,11 +18,11 @@ import roboguice.inject.InjectView;
  */
 
 @ContextSingleton
-public class RadarComponent {
+public class RadarDrawer {
     private static final float RADAR_SCALE_RATIO = 0.85f;
     public static final int OBJECT_CIRCLE_RADIUS_DP = 3;
     public static final int RADAR_MARGIN_DP = 15;
-    public static final int RADAR_SIZE_DP = 150;
+    public static final int RADAR_SIZE_DP = 140;
 
     @Inject
     private ObjectsProvider objectsProvider;
@@ -48,7 +48,7 @@ public class RadarComponent {
     private float width;
     private float height;
 
-    public RadarComponent() {
+    public RadarDrawer() {
         planePaint = new Paint();
         planePaint.setColor(Color.RED);
 
